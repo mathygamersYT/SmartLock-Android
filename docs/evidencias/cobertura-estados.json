@@ -1,0 +1,9 @@
+{
+  "validacion_error": "Corte de Wi-Fi y datos durante una operación; mensaje No se pudo validar conservado",
+  "reintento": "Credencial no registrada\nEvento: b4d43225842e4e1a97569591e8aeb1c2\nConfirmado en Firebase · 221 ms\nConsulta este evento en el Android administrador.",
+  "autenticacion_espera": "Captura con latencia artificial de 1500 ms; no se usa como medición",
+  "cambios_UI": [
+    "Correo de sesión parcialmente oculto",
+    "El estado de autorización no sobrescribe una validación en curso ni su error"
+  ]
+}

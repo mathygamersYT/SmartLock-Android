@@ -46,7 +46,7 @@ class SimulatorActivity : AppCompatActivity() {
         status = findViewById(R.id.simConnection)
         result = findViewById(R.id.simResult)
         detail = findViewById(R.id.simDetail)
-        findViewById<TextView>(R.id.simEmail).text = auth.currentUser?.email.orEmpty()
+        findViewById<TextView>(R.id.simEmail).text = AccessPolicy.maskedEmail(auth.currentUser?.email)
         submit.setOnClickListener { simulate() }
         findViewById<Button>(R.id.btnExampleActive).setOnClickListener { uidInput.setText("04:A3:9C:21") }
         findViewById<Button>(R.id.btnExampleUnknown).setOnClickListener { uidInput.setText("FF:FF:FF:FF") }
@@ -97,7 +97,7 @@ class SimulatorActivity : AppCompatActivity() {
             result.text = "Listo para validar"
             detail.text = "Ingresa un UID y pulsa Simular lectura."
         }
-        if (!admin && !simulator) {
+        if (!admin && !simulator && !busy && result.text.toString() != "No se pudo validar") {
             result.text = "Esperando autorización"
             detail.text = "UID de esta cuenta: " + auth.currentUser?.uid.orEmpty() +
                 "\nEl responsable debe habilitar esta cuenta como simulador."

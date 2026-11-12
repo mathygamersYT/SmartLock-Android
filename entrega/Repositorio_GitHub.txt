@@ -1,1 +1,5 @@
+Código fuente:
 https://github.com/mathygamersYT/SmartLock-Android
+
+Release con APK y entrega:
+https://github.com/mathygamersYT/SmartLock-Android/releases/tag/v1.0.0

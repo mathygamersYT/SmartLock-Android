@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.iot.AccessPolicyTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-12T03:54:52.774Z" hostname="AKIIWII-IDEAPAD" time="0.078">
+<testsuite name="com.example.iot.AccessPolicyTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-12T04:29:11.285Z" hostname="AKIIWII-IDEAPAD" time="0.034">
   <properties/>
-  <testcase name="normalizesRfidFormats" classname="com.example.iot.AccessPolicyTest" time="0.033"/>
-  <testcase name="heartbeatExpiresAndRejectsFutureDates" classname="com.example.iot.AccessPolicyTest" time="0.0"/>
-  <testcase name="simulationDistinguishesUnknownRevokedAndActive" classname="com.example.iot.AccessPolicyTest" time="0.001"/>
-  <testcase name="masksCredential" classname="com.example.iot.AccessPolicyTest" time="0.002"/>
-  <testcase name="rejectsMalformedUids" classname="com.example.iot.AccessPolicyTest" time="0.002"/>
+  <testcase name="normalizesRfidFormats" classname="com.example.iot.AccessPolicyTest" time="0.023"/>
+  <testcase name="heartbeatExpiresAndRejectsFutureDates" classname="com.example.iot.AccessPolicyTest" time="0.001"/>
+  <testcase name="simulationDistinguishesUnknownRevokedAndActive" classname="com.example.iot.AccessPolicyTest" time="0.0"/>
+  <testcase name="masksCredential" classname="com.example.iot.AccessPolicyTest" time="0.001"/>
+  <testcase name="rejectsMalformedUids" classname="com.example.iot.AccessPolicyTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

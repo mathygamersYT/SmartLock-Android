@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
-        findViewById<TextView>(R.id.sessionEmail).text = auth.currentUser?.email.orEmpty()
+        findViewById<TextView>(R.id.sessionEmail).text = AccessPolicy.maskedEmail(auth.currentUser?.email)
         findViewById<TextView>(R.id.accountUid).text = "UID de cuenta: " + auth.currentUser?.uid.orEmpty()
         findViewById<Button>(R.id.btnSimulator).setOnClickListener {
             startActivity(Intent(this, SimulatorActivity::class.java))

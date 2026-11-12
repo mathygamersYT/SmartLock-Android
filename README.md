@@ -113,3 +113,8 @@ administrativas. google-services.json es la configuración del cliente existente
 Código y entrega: https://github.com/mathygamersYT/SmartLock-Android
 
 Consulta [la validación del 12 de noviembre](docs/VALIDACION_2026-11-12.md) y las [capturas reales](docs/capturas). La APK de depuración está en entrega/SmartLock.apk. La prueba complementaria usa un teléfono y un emulador; quedan pendientes dos teléfonos físicos, distancia, consumo y revisión docente.
+
+
+## Release de la corrección
+
+[Descargar APK e informe de la Release v1.0.0](https://github.com/mathygamersYT/SmartLock-Android/releases/tag/v1.0.0). Consulta también [la cobertura de las 44 capturas](docs/COBERTURA_CAPTURAS.md), que identifica las diferencias respecto del mockup.

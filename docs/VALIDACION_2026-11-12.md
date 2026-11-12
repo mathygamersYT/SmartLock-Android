@@ -24,3 +24,8 @@ Las capturas de docs/capturas corresponden a la APK real. Los JSON de docs/evide
 La prueba usa un teléfono y un emulador; no demuestra dos teléfonos físicos ni una presentación en clase. No se midieron distancia al router, consumo de batería ni latencia hasta el otro cliente. La recuperación por correo y la validación con la docente siguen pendientes. No se accionó una cerradura ni se conectó un Arduino.
 
 Al terminar, tanto la credencial ficticia como el rol de la cuenta de prueba quedaron revocados. Los datos anteriores se conservaron. La evaluación no se ha enviado a AAI.
+
+
+## Ampliación de capturas
+
+Consulta [la cobertura de las 44 capturas](COBERTURA_CAPTURAS.md). Se añadieron filtros, vacíos, errores de formulario, duplicados, habilitación, recuperación solicitada, espera, fallo y reintento. El correo de sesión se muestra parcialmente oculto y se conserva el error de validación frente a actualizaciones de autorización. La compilación, cinco pruebas de lógica y lint volvieron a aprobarse.

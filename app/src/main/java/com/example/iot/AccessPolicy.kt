@@ -14,6 +14,10 @@ object AccessPolicy {
 
     fun maskedUid(uid: String): String = "•••• " + uid.takeLast(4)
 
+    fun maskedEmail(email: String?): String = email?.takeIf { '@' in it }
+        ?.let { it.take(1) + "•••@" + it.substringAfter('@') }
+        ?: "Cuenta autenticada"
+
     fun isOnline(lastSeen: Long?, now: Long): Boolean =
         lastSeen != null && now - lastSeen in 0L..60_000L
 }
