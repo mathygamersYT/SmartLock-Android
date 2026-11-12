@@ -1,0 +1,7 @@
+{
+  "duracion_sin_red_s": 30.0,
+  "boton_validar_habilitado": false,
+  "permisos_nuevos_confirmados": 0,
+  "alcance": "Emulador sin Wi-Fi ni datos móviles; sin interrupción del teléfono físico",
+  "reconexion": "Acceso permitido confirmado con la credencial activa"
+}

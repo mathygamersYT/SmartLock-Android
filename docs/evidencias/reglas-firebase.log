@@ -1,0 +1,70 @@
+i  emulators: Starting emulators: auth, firestore
+i  emulators: Detected demo project ID "demo-smartlock", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+i  firestore: Firestore Emulator logging to firestore-debug.log
++  firestore: Firestore Emulator was started in standard edition.
++  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: node --test rules.test.mjs
+[2026-11-09T20:55:57.152Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92458 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L27, false for 'create' @ L113, false for 'update' @ L27, false for 'update' @ L113
+[2026-11-09T20:55:57.238Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92459 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L17:32 for 'create' @ L17, false for 'create' @ L113, evaluation error at L17:32 for 'update' @ L17, false for 'update' @ L113, false for 'create' @ L17, false for 'create' @ L113
+✔ anonymous and ordinary accounts cannot read cards or promote themselves (3029.7393ms)
+✔ simulator can check known or unknown UID but cannot enumerate cards or read audit (279.3598ms)
+[2026-11-09T20:55:57.602Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba9245d error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L53:24 for 'update' @ L53, false for 'update' @ L113, false for 'update' @ L53, false for 'update' @ L113
+[2026-11-09T20:55:57.624Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba9245e error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L17:32 for 'create' @ L17, false for 'create' @ L113, evaluation error at L17:32 for 'update' @ L17, false for 'update' @ L113, false for 'update' @ L17, false for 'update' @ L113
+[2026-11-09T20:55:57.637Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba9245f error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L99, false for 'create' @ L113, false for 'update' @ L99, false for 'update' @ L113
+[2026-11-09T20:55:57.655Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92460 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L103, false for 'create' @ L113, false for 'update' @ L103, false for 'update' @ L113
+✔ simulator cannot modify cards, its role, or physical telemetry (136.9351ms)
+[2026-11-09T20:55:57.859Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92463 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L95, false for 'update' @ L113
+[2026-11-09T20:55:57.870Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92465 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L95, false for 'delete' @ L113
+✔ allowed event is immutable, visible to admin, and not readable by another simulator (254.4738ms)
+[2026-11-09T20:55:58.004Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92469 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L84:24 for 'create' @ L84, false for 'create' @ L113, false for 'update' @ L95, false for 'update' @ L113, false for 'create' @ L84, false for 'create' @ L113
+[2026-11-09T20:55:58.085Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba9246b error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L84:24 for 'create' @ L84, false for 'create' @ L113, false for 'update' @ L95, false for 'update' @ L113, false for 'create' @ L84, false for 'create' @ L113
+✔ server rejects a forged permission for revoked or unknown credentials (209.0942ms)
+[2026-11-09T20:55:58.186Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba9246e error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L84:24 for 'create' @ L84, false for 'create' @ L113, false for 'update' @ L95, false for 'update' @ L113, false for 'create' @ L84, false for 'create' @ L113
+[2026-11-09T20:55:58.206Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba9246f error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L84:24 for 'create' @ L84, false for 'create' @ L113, false for 'update' @ L95, false for 'update' @ L113, false for 'create' @ L84, false for 'create' @ L113
+[2026-11-09T20:55:58.219Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92470 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L84, false for 'create' @ L113, false for 'update' @ L95, false for 'update' @ L113
+[2026-11-09T20:55:58.238Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92471 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L84:24 for 'create' @ L84, false for 'create' @ L113, false for 'update' @ L95, false for 'update' @ L113, false for 'create' @ L84, false for 'create' @ L113
+[2026-11-09T20:55:58.274Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92472 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L84:24 for 'create' @ L84, false for 'create' @ L113, false for 'update' @ L95, false for 'update' @ L113, false for 'create' @ L84, false for 'create' @ L113
+[2026-11-09T20:55:58.305Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92473 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L84:24 for 'create' @ L84, false for 'create' @ L113, false for 'update' @ L95, false for 'update' @ L113, false for 'create' @ L84, false for 'create' @ L113
+✔ server rejects actor, origin, timestamp and schema spoofing (185.8941ms)
+[2026-11-09T20:55:58.389Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92475 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L53:24 for 'update' @ L53, false for 'update' @ L113, Null value error. for 'update' @ L53, false for 'update' @ L113
+[2026-11-09T20:55:58.458Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92477 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L84:24 for 'create' @ L84, false for 'create' @ L113, false for 'update' @ L95, false for 'update' @ L113, false for 'create' @ L84, false for 'create' @ L113
+✔ admin can revoke only with matching audit in the same transaction (153.2665ms)
+✔ same transaction ID can recover an event without creating duplicates (172.6474ms)
+[2026-11-09T20:55:58.739Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92481 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L84:24 for 'create' @ L84, false for 'create' @ L113, false for 'update' @ L95, false for 'update' @ L113, false for 'create' @ L84, false for 'create' @ L113
+[2026-11-09T20:55:58.770Z]  @firebase/firestore: Firestore (13.2.0): GrpcConnection RPC 'Write' stream 0x3ba92482 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L17:32 for 'create' @ L17, false for 'create' @ L113, evaluation error at L17:32 for 'update' @ L17, false for 'update' @ L113, false for 'update' @ L17, false for 'update' @ L113
+✔ administrator can provision and revoke simulator, simulator cannot self-restore (174.7572ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5076.7539
++  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+!  Firestore Emulator has exited upon receiving signal: SIGINT
+i  auth: Stopping Authentication Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator

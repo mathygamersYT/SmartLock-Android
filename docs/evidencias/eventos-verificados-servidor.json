@@ -1,0 +1,282 @@
+[
+  {
+    "name": "projects/iot-aki-d467d/databases/(default)/documents/eventosSimulados/87ecdecad67d48dbb9f08b6aac8b2d59",
+    "fields": {
+      "dispositivoId": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "uidRFID": {
+        "stringValue": "04A39C21"
+      },
+      "origen": {
+        "stringValue": "SIMULACION"
+      },
+      "resultado": {
+        "stringValue": "PERMITIDO"
+      },
+      "actorUid": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "motivo": {
+        "stringValue": "ACTIVA"
+      },
+      "fecha": {
+        "timestampValue": "2026-11-12T03:56:18.915Z"
+      }
+    },
+    "createTime": "2026-11-12T03:56:18.947281Z",
+    "updateTime": "2026-11-12T03:56:18.947281Z"
+  },
+  {
+    "name": "projects/iot-aki-d467d/databases/(default)/documents/eventosSimulados/cdc4957630064dd1af6bbc87f8e9d8c9",
+    "fields": {
+      "actorUid": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "resultado": {
+        "stringValue": "PERMITIDO"
+      },
+      "uidRFID": {
+        "stringValue": "04A39C21"
+      },
+      "fecha": {
+        "timestampValue": "2026-11-12T03:56:23.168Z"
+      },
+      "motivo": {
+        "stringValue": "ACTIVA"
+      },
+      "dispositivoId": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "origen": {
+        "stringValue": "SIMULACION"
+      }
+    },
+    "createTime": "2026-11-12T03:56:23.212248Z",
+    "updateTime": "2026-11-12T03:56:23.212248Z"
+  },
+  {
+    "name": "projects/iot-aki-d467d/databases/(default)/documents/eventosSimulados/31431f7db5df48d5955117588e96dab3",
+    "fields": {
+      "origen": {
+        "stringValue": "SIMULACION"
+      },
+      "dispositivoId": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "actorUid": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "resultado": {
+        "stringValue": "PERMITIDO"
+      },
+      "fecha": {
+        "timestampValue": "2026-11-12T03:56:27.557Z"
+      },
+      "uidRFID": {
+        "stringValue": "04A39C21"
+      },
+      "motivo": {
+        "stringValue": "ACTIVA"
+      }
+    },
+    "createTime": "2026-11-12T03:56:27.579580Z",
+    "updateTime": "2026-11-12T03:56:27.579580Z"
+  },
+  {
+    "name": "projects/iot-aki-d467d/databases/(default)/documents/eventosSimulados/1005c12de5e74dc7be0fb2ad0f08522e",
+    "fields": {
+      "dispositivoId": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "uidRFID": {
+        "stringValue": "04A39C21"
+      },
+      "resultado": {
+        "stringValue": "PERMITIDO"
+      },
+      "motivo": {
+        "stringValue": "ACTIVA"
+      },
+      "origen": {
+        "stringValue": "SIMULACION"
+      },
+      "fecha": {
+        "timestampValue": "2026-11-12T03:56:31.892Z"
+      },
+      "actorUid": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      }
+    },
+    "createTime": "2026-11-12T03:56:31.908436Z",
+    "updateTime": "2026-11-12T03:56:31.908436Z"
+  },
+  {
+    "name": "projects/iot-aki-d467d/databases/(default)/documents/eventosSimulados/00e4f9a0725f4c30add7b5c4592c593a",
+    "fields": {
+      "origen": {
+        "stringValue": "SIMULACION"
+      },
+      "dispositivoId": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "fecha": {
+        "timestampValue": "2026-11-12T03:56:36.304Z"
+      },
+      "actorUid": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "resultado": {
+        "stringValue": "PERMITIDO"
+      },
+      "uidRFID": {
+        "stringValue": "04A39C21"
+      },
+      "motivo": {
+        "stringValue": "ACTIVA"
+      }
+    },
+    "createTime": "2026-11-12T03:56:36.317343Z",
+    "updateTime": "2026-11-12T03:56:36.317343Z"
+  },
+  {
+    "name": "projects/iot-aki-d467d/databases/(default)/documents/eventosSimulados/35924a5ba9cd4dcea10bee829cd37f1f",
+    "fields": {
+      "resultado": {
+        "stringValue": "PERMITIDO"
+      },
+      "uidRFID": {
+        "stringValue": "04A39C21"
+      },
+      "fecha": {
+        "timestampValue": "2026-11-12T03:56:40.654Z"
+      },
+      "motivo": {
+        "stringValue": "ACTIVA"
+      },
+      "dispositivoId": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "actorUid": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "origen": {
+        "stringValue": "SIMULACION"
+      }
+    },
+    "createTime": "2026-11-12T03:56:40.704884Z",
+    "updateTime": "2026-11-12T03:56:40.704884Z"
+  },
+  {
+    "name": "projects/iot-aki-d467d/databases/(default)/documents/eventosSimulados/c80113038bed4612b04c5e62d4046c62",
+    "fields": {
+      "fecha": {
+        "timestampValue": "2026-11-12T03:56:45.186Z"
+      },
+      "origen": {
+        "stringValue": "SIMULACION"
+      },
+      "actorUid": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "resultado": {
+        "stringValue": "PERMITIDO"
+      },
+      "motivo": {
+        "stringValue": "ACTIVA"
+      },
+      "dispositivoId": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "uidRFID": {
+        "stringValue": "04A39C21"
+      }
+    },
+    "createTime": "2026-11-12T03:56:45.204677Z",
+    "updateTime": "2026-11-12T03:56:45.204677Z"
+  },
+  {
+    "name": "projects/iot-aki-d467d/databases/(default)/documents/eventosSimulados/1566711463e44289a08043a0d5780374",
+    "fields": {
+      "resultado": {
+        "stringValue": "PERMITIDO"
+      },
+      "actorUid": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "uidRFID": {
+        "stringValue": "04A39C21"
+      },
+      "origen": {
+        "stringValue": "SIMULACION"
+      },
+      "dispositivoId": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "motivo": {
+        "stringValue": "ACTIVA"
+      },
+      "fecha": {
+        "timestampValue": "2026-11-12T03:56:49.369Z"
+      }
+    },
+    "createTime": "2026-11-12T03:56:49.384924Z",
+    "updateTime": "2026-11-12T03:56:49.384924Z"
+  },
+  {
+    "name": "projects/iot-aki-d467d/databases/(default)/documents/eventosSimulados/083465e7ea08481388b1154e57c71f80",
+    "fields": {
+      "fecha": {
+        "timestampValue": "2026-11-12T03:56:53.707Z"
+      },
+      "actorUid": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "uidRFID": {
+        "stringValue": "04A39C21"
+      },
+      "motivo": {
+        "stringValue": "ACTIVA"
+      },
+      "resultado": {
+        "stringValue": "PERMITIDO"
+      },
+      "dispositivoId": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "origen": {
+        "stringValue": "SIMULACION"
+      }
+    },
+    "createTime": "2026-11-12T03:56:53.743129Z",
+    "updateTime": "2026-11-12T03:56:53.743129Z"
+  },
+  {
+    "name": "projects/iot-aki-d467d/databases/(default)/documents/eventosSimulados/6471ca813f93449191246834b9fc7057",
+    "fields": {
+      "resultado": {
+        "stringValue": "PERMITIDO"
+      },
+      "fecha": {
+        "timestampValue": "2026-11-12T03:56:58.053Z"
+      },
+      "motivo": {
+        "stringValue": "ACTIVA"
+      },
+      "dispositivoId": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "origen": {
+        "stringValue": "SIMULACION"
+      },
+      "actorUid": {
+        "stringValue": "t0cyEXwpckYD0KqhkU6rQ2l3GL03"
+      },
+      "uidRFID": {
+        "stringValue": "04A39C21"
+      }
+    },
+    "createTime": "2026-11-12T03:56:58.069211Z",
+    "updateTime": "2026-11-12T03:56:58.069211Z"
+  }
+]

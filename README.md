@@ -107,3 +107,9 @@ Incluir proyecto, instrucciones y resultados de pruebas en GitHub; subir al AAI 
 con el enlace según la guía. No se ha creado ni publicado un repositorio remoto.
 No versionar local.properties, node_modules, salidas de build, contraseñas o credenciales
 administrativas. google-services.json es la configuración del cliente existente.
+
+## Evidencias de la corrección
+
+Código y entrega: https://github.com/mathygamersYT/SmartLock-Android
+
+Consulta [la validación del 12 de noviembre](docs/VALIDACION_2026-11-12.md) y las [capturas reales](docs/capturas). La APK de depuración está en entrega/SmartLock.apk. La prueba complementaria usa un teléfono y un emulador; quedan pendientes dos teléfonos físicos, distancia, consumo y revisión docente.

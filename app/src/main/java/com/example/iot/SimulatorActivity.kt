@@ -93,6 +93,10 @@ class SimulatorActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnBackAdmin).visibility = if (admin) View.VISIBLE else View.GONE
         status.text = if (admin || simulator) "Punto de acceso autorizado · Firebase conectado"
             else "Verificando autorización. Se requiere conexión y un rol activo."
+        if ((admin || simulator) && result.text.toString() == "Esperando autorización") {
+            result.text = "Listo para validar"
+            detail.text = "Ingresa un UID y pulsa Simular lectura."
+        }
         if (!admin && !simulator) {
             result.text = "Esperando autorización"
             detail.text = "UID de esta cuenta: " + auth.currentUser?.uid.orEmpty() +

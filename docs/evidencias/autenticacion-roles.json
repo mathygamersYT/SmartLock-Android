@@ -1,0 +1,8 @@
+{
+  "cuenta_nueva_sin_admin": true,
+  "rol_simulador_habilitado_y_revocado": true,
+  "boton_deshabilitado_tras_revocar": true,
+  "cierre_sesion_emulador": true,
+  "clave_incorrecta_rechazada": true,
+  "recuperacion_correo": "No probada"
+}

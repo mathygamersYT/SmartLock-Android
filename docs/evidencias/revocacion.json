@@ -1,0 +1,6 @@
+{
+  "uidRFID": "04A39C21",
+  "revocada": "La credencial fue revocada\nEvento: a3b9622e80d44d5f8b8a968b6f4a2269\nConfirmado en Firebase · 134 ms\nConsulta este evento en el Android administrador.",
+  "desconocida": "Credencial no registrada\nEvento: f466bd1c55244a359a77febd9e525880\nConfirmado en Firebase · 213 ms\nConsulta este evento en el Android administrador.",
+  "mismo_uid_antes_y_despues": true
+}

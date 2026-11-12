@@ -58,3 +58,7 @@ sistema de pruebas de Gradle. No desinstalar ni borrar datos del teléfono para 
 - Ejecutar pruebas de pérdida de red y cierre de sesión en ambos dispositivos.
 - Publicar el código en GitHub y entregar el TXT del enlace en AAI.
 - Hardware RC522, firmware, relé, cerradura y Bluetooth quedan fuera del simulador.
+
+## Actualización del 12 de noviembre
+
+Consulta [la validación complementaria](VALIDACION_2026-11-12.md): teléfono y emulador, serie de diez transacciones, corte de red de 30 segundos, autenticación y revocación de roles.

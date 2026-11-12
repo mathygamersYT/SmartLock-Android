@@ -1,0 +1,69 @@
+{
+  "fecha": "2026-11-12",
+  "entorno": "Emulador Android a Firebase real; sin distancia física medida",
+  "mide": "Duración indicada por SimulatorActivity hasta confirmar la transacción; no es latencia hasta el otro cliente",
+  "intentos": [
+    {
+      "intento": 1,
+      "evento": "87ecdecad67d48dbb9f08b6aac8b2d59",
+      "confirmacion_ms": 467,
+      "resultado": "PERMITIDO"
+    },
+    {
+      "intento": 2,
+      "evento": "cdc4957630064dd1af6bbc87f8e9d8c9",
+      "confirmacion_ms": 160,
+      "resultado": "PERMITIDO"
+    },
+    {
+      "intento": 3,
+      "evento": "31431f7db5df48d5955117588e96dab3",
+      "confirmacion_ms": 127,
+      "resultado": "PERMITIDO"
+    },
+    {
+      "intento": 4,
+      "evento": "1005c12de5e74dc7be0fb2ad0f08522e",
+      "confirmacion_ms": 99,
+      "resultado": "PERMITIDO"
+    },
+    {
+      "intento": 5,
+      "evento": "00e4f9a0725f4c30add7b5c4592c593a",
+      "confirmacion_ms": 130,
+      "resultado": "PERMITIDO"
+    },
+    {
+      "intento": 6,
+      "evento": "35924a5ba9cd4dcea10bee829cd37f1f",
+      "confirmacion_ms": 150,
+      "resultado": "PERMITIDO"
+    },
+    {
+      "intento": 7,
+      "evento": "c80113038bed4612b04c5e62d4046c62",
+      "confirmacion_ms": 322,
+      "resultado": "PERMITIDO"
+    },
+    {
+      "intento": 8,
+      "evento": "1566711463e44289a08043a0d5780374",
+      "confirmacion_ms": 112,
+      "resultado": "PERMITIDO"
+    },
+    {
+      "intento": 9,
+      "evento": "083465e7ea08481388b1154e57c71f80",
+      "confirmacion_ms": 156,
+      "resultado": "PERMITIDO"
+    },
+    {
+      "intento": 10,
+      "evento": "6471ca813f93449191246834b9fc7057",
+      "confirmacion_ms": 127,
+      "resultado": "PERMITIDO"
+    }
+  ],
+  "mediana_ms": 140.0,
+  "maximo_ms": 467
+}
