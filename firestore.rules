@@ -1,0 +1,115 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function admin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/administradores/$(request.auth.uid))
+        && get(/databases/$(database)/documents/administradores/$(request.auth.uid)).data.activo == true;
+    }
+    function simulator() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/simuladores/$(request.auth.uid))
+        && get(/databases/$(database)/documents/simuladores/$(request.auth.uid)).data.activo == true;
+    }
+    match /simuladores/{uid} {
+      allow get: if signedIn() && (request.auth.uid == uid || admin());
+      allow create, update: if admin()
+        && request.resource.data.keys().hasAll(['activo', 'habilitadoPor', 'fecha'])
+        && request.resource.data.keys().hasOnly(['activo', 'habilitadoPor', 'fecha'])
+        && request.resource.data.activo is bool
+        && request.resource.data.habilitadoPor == request.auth.uid
+        && request.resource.data.fecha == request.time;
+      allow list, delete: if false;
+    }
+    match /administradores/{uid} {
+      allow get: if signedIn() && request.auth.uid == uid;
+      allow list, write: if false;
+    }
+    match /tarjetas/{uid} {
+      function validCard() {
+        let d = request.resource.data;
+        return uid.matches('^([0-9A-F]{8}|[0-9A-F]{14}|[0-9A-F]{20})$')
+          && d.keys().hasAll(['nombre', 'habilitada', 'actualizadaEn', 'actualizadaPor', 'ultimaOperacion', 'fechaCreacion'])
+          && d.keys().hasOnly(['nombre', 'habilitada', 'actualizadaEn', 'actualizadaPor', 'ultimaOperacion', 'fechaCreacion'])
+          && d.nombre is string && d.nombre.size() > 0 && d.nombre.size() <= 80
+          && d.habilitada is bool
+          && d.actualizadaEn == request.time
+          && d.actualizadaPor == request.auth.uid
+          && d.ultimaOperacion is string
+          && d.ultimaOperacion.matches('^[a-zA-Z0-9]{20}$');
+      }
+      function audited(action) {
+        let id = request.resource.data.ultimaOperacion;
+        let record = getAfter(/databases/$(database)/documents/auditoria/$(id)).data;
+        return record.actorUid == request.auth.uid && record.tarjetaUid == uid
+          && record.accion == action && record.fecha == request.time;
+      }
+      allow get: if admin() || simulator();
+      allow list: if admin();
+      allow create: if admin() && validCard()
+        && request.resource.data.fechaCreacion == request.time
+        && request.resource.data.habilitada == true && audited('ALTA');
+      allow update: if admin() && validCard()
+        && request.resource.data.fechaCreacion == resource.data.fechaCreacion
+        && request.resource.data.nombre == resource.data.nombre
+        && request.resource.data.ultimaOperacion != resource.data.ultimaOperacion
+        && audited(request.resource.data.habilitada ? 'HABILITAR' : 'REVOCAR');
+      allow delete: if false;
+    }
+    match /auditoria/{id} {
+      allow read: if admin();
+      allow create: if admin()
+        && request.resource.data.keys().hasOnly(['actorUid', 'tarjetaUid', 'accion', 'fecha'])
+        && request.resource.data.actorUid == request.auth.uid
+        && request.resource.data.tarjetaUid is string
+        && request.resource.data.accion in ['ALTA', 'HABILITAR', 'REVOCAR']
+        && request.resource.data.fecha == request.time;
+      allow update, delete: if false;
+    }
+    // Only a trusted backend using the Admin SDK writes physical telemetry.
+    match /eventosSimulados/{id} {
+      function validDecision(d) {
+        let path = /databases/$(database)/documents/tarjetas/$(d.uidRFID);
+        return !exists(path)
+          ? d.resultado == 'RECHAZADO' && d.motivo == 'DESCONOCIDA'
+          : (get(path).data.habilitada == true
+            ? d.resultado == 'PERMITIDO' && d.motivo == 'ACTIVA'
+            : d.resultado == 'RECHAZADO' && d.motivo == 'REVOCADA');
+      }
+      allow get: if admin() || (simulator()
+        && (!exists(/databases/$(database)/documents/eventosSimulados/$(id))
+          || resource.data.actorUid == request.auth.uid));
+      allow list: if admin();
+      allow create: if (admin() || simulator())
+        && id.matches('^[a-f0-9]{32}$')
+        && request.resource.data.keys().hasAll(['actorUid', 'uidRFID', 'resultado', 'motivo', 'origen', 'dispositivoId', 'fecha'])
+        && request.resource.data.keys().hasOnly(['actorUid', 'uidRFID', 'resultado', 'motivo', 'origen', 'dispositivoId', 'fecha'])
+        && request.resource.data.actorUid == request.auth.uid
+        && request.resource.data.dispositivoId == request.auth.uid
+        && request.resource.data.uidRFID is string
+        && request.resource.data.uidRFID.matches('^([0-9A-F]{8}|[0-9A-F]{14}|[0-9A-F]{20})$')
+        && request.resource.data.origen == 'SIMULACION'
+        && request.resource.data.fecha == request.time
+        && validDecision(request.resource.data);
+      allow update, delete: if false;
+    }
+    match /eventos/{id} {
+      allow read: if admin();
+      allow write: if false;
+    }
+    match /dispositivos/{id} {
+      allow read: if admin();
+      allow write: if false;
+    }
+    // Preserve the two existing classroom exercises and their original expiry.
+    // Smart Lock uses the explicit protected collections above.
+    match /personas/{document=**} {
+      allow read, write: if request.time < timestamp.date(2026, 12, 2);
+    }
+    match /usuarios/{document=**} {
+      allow read, write: if request.time < timestamp.date(2026, 12, 2);
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

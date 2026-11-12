@@ -1,0 +1,8 @@
+<resources>
+ <style name="Base.Theme.IoT" parent="Theme.Material3.DayNight.NoActionBar">
+  <item name="colorPrimary">@color/accent</item><item name="colorOnPrimary">#09251D</item>
+  <item name="colorSecondary">@color/accent</item><item name="colorSurface">@color/surface</item><item name="colorOnSurface">@color/text</item>
+  <item name="android:colorBackground">@color/page</item><item name="android:windowLightStatusBar">false</item>
+  <item name="android:statusBarColor">@color/page</item><item name="android:navigationBarColor">@color/page</item><item name="android:fontFamily">sans</item>
+ </style>
+</resources>

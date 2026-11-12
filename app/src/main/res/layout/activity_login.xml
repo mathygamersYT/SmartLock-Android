@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/loginRoot" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:background="@color/page" android:padding="24dp">
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center_vertical">
+  <TextView style="@style/Eyebrow" android:text="RFID / SEGURIDAD / TRAZABILIDAD" />
+  <ImageView android:layout_width="64dp" android:layout_height="64dp" android:layout_marginBottom="20dp" android:src="@drawable/ic_smartlock" android:contentDescription="Smart Lock" />
+  <TextView style="@style/ScreenTitle" android:text="Smart Lock" android:textSize="42sp" />
+  <TextView style="@style/BodyCopy" android:text="Cada acceso cuenta.\nGestiona credenciales y consulta lo que ocurre en tu punto de acceso." />
+  <com.google.android.material.card.MaterialCardView style="@style/Panel"><LinearLayout style="@style/PanelContent">
+   <TextView style="@style/SectionTitle" android:text="Bienvenido" />
+   <TextView style="@style/Caption" android:text="Ingresa con tu cuenta de administrador o simulador." />
+   <EditText android:id="@+id/etEmail" style="@style/FormField" android:hint="Correo electrónico" android:inputType="textEmailAddress" android:autofillHints="emailAddress" />
+   <EditText android:id="@+id/etPassword" style="@style/FormField" android:hint="Contraseña" android:inputType="textPassword" android:autofillHints="password" android:saveEnabled="false" />
+   <ProgressBar android:id="@+id/authProgress" android:layout_width="32dp" android:layout_height="32dp" android:layout_gravity="center_horizontal" android:visibility="gone" />
+   <TextView android:id="@+id/tvAuthStatus" style="@style/BodyCopy" android:accessibilityLiveRegion="polite" />
+   <Button android:id="@+id/btnLogin" style="@style/PrimaryAction" android:text="Iniciar sesión" />
+   <Button android:id="@+id/btnRegister" style="@style/SecondaryAction" android:text="Crear cuenta" />
+   <Button android:id="@+id/btnResetPassword" style="@style/TabAction" android:layout_width="match_parent" android:text="Olvidé mi contraseña" />
+  </LinearLayout></com.google.android.material.card.MaterialCardView>
+  <TextView style="@style/Caption" android:text="Una cuenta nueva requiere habilitación del responsable. Tus permisos se verifican con Firebase." />
+ </LinearLayout>
+</ScrollView>

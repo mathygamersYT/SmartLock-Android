@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "602184749128",
+    "project_id": "iot-aki-d467d",
+    "storage_bucket": "iot-aki-d467d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602184749128:android:17bfd66dfe6d43da5a087d",
+        "android_client_info": {
+          "package_name": "com.example.iot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMxi5OiK0sHKjfQiSB1ssbAjn93qAHmkg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

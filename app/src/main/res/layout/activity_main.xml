@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+ android:id="@+id/main" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:background="@color/page">
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+  <TextView style="@style/Eyebrow" android:text="SMART LOCK / CONTROL DE ACCESO" />
+  <TextView style="@style/ScreenTitle" android:text="Control de acceso" android:textSize="28sp" />
+  <TextView android:id="@+id/sessionEmail" style="@style/BodyCopy" android:text="" />
+  <com.google.android.material.card.MaterialCardView style="@style/Panel" app:cardBackgroundColor="@color/ink">
+   <LinearLayout style="@style/PanelContent">
+    <TextView style="@style/Eyebrow" android:textColor="#8EE9C0" android:text="DEMOSTRACIÓN CON DOS ANDROID" />
+    <TextView style="@style/SectionTitle" android:textColor="#FFFFFF" android:text="Punto de acceso" />
+    <TextView style="@style/BodyCopy" android:textColor="#DFE7EF" android:text="Prueba una lectura RFID desde este u otro Android." />
+    <Button android:id="@+id/btnSimulator" style="@style/PrimaryAction" android:backgroundTint="@color/accent" android:textColor="#09251D" android:text="Abrir punto de acceso" />
+   </LinearLayout>
+  </com.google.android.material.card.MaterialCardView>
+  <com.google.android.material.card.MaterialCardView android:id="@+id/rolePanel" style="@style/Panel">
+   <LinearLayout style="@style/PanelContent">
+    <TextView android:id="@+id/accessStatus" style="@style/BodyCopy" android:accessibilityLiveRegion="polite" android:text="Verificando tu autorización…" />
+    <TextView android:id="@+id/accountUid" style="@style/Caption" android:textIsSelectable="true" />
+    <Button android:id="@+id/btnRefreshAccess" style="@style/SecondaryAction" android:text="Verificar acceso de administrador" />
+   </LinearLayout>
+  </com.google.android.material.card.MaterialCardView>
+  <LinearLayout android:id="@+id/adminContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+   <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none" android:layout_marginBottom="16dp">
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+     <Button android:id="@+id/tabSummary" style="@style/TabAction" android:text="Inicio" />
+     <Button android:id="@+id/tabCards" style="@style/TabAction" android:text="Credenciales" />
+     <Button android:id="@+id/tabHistory" style="@style/TabAction" android:text="Historial" />
+     <Button android:id="@+id/tabAudit" style="@style/TabAction" android:text="Auditoría" />
+    </LinearLayout>
+   </HorizontalScrollView>
+   <LinearLayout android:id="@+id/summarySection" style="@style/SectionContent">
+    <TextView style="@style/SectionTitle" android:text="Vista general" />
+    <Button android:id="@+id/btnPairSimulator" style="@style/SecondaryAction" android:text="Vincular o revocar segundo Android" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+     <com.google.android.material.card.MaterialCardView style="@style/Panel" android:layout_width="0dp" android:layout_weight="1" android:layout_marginEnd="8dp">
+      <LinearLayout style="@style/PanelContent"><TextView android:id="@+id/activeCount" style="@style/ScreenTitle" android:text="0" /><TextView style="@style/Caption" android:text="Credenciales activas" /></LinearLayout>
+     </com.google.android.material.card.MaterialCardView>
+     <com.google.android.material.card.MaterialCardView style="@style/Panel" android:layout_width="0dp" android:layout_weight="1">
+      <LinearLayout style="@style/PanelContent"><TextView android:id="@+id/eventCount" style="@style/ScreenTitle" android:text="0" /><TextView style="@style/Caption" android:text="Intentos recientes" /></LinearLayout>
+     </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+    <com.google.android.material.card.MaterialCardView style="@style/Panel"><LinearLayout style="@style/PanelContent">
+     <TextView style="@style/Eyebrow" android:text="ACTIVIDAD RECIENTE" /><TextView android:id="@+id/latestAttempt" style="@style/BodyCopy" android:text="Cargando intentos…" />
+    </LinearLayout></com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView style="@style/Panel"><LinearLayout style="@style/PanelContent">
+     <TextView style="@style/Eyebrow" android:text="HARDWARE / PUERTA PRINCIPAL" />
+     <TextView android:id="@+id/deviceStatus" style="@style/SectionTitle" android:text="Sin datos del Arduino" />
+     <TextView android:id="@+id/doorStatus" style="@style/BodyCopy" android:text="Puerta: sin datos" />
+     <TextView android:id="@+id/lastSeen" style="@style/Caption" android:text="Último reporte: sin datos" />
+     <TextView android:id="@+id/lastSync" style="@style/Caption" android:text="Sin sincronización confirmada" />
+     <TextView style="@style/Caption" android:layout_marginTop="12dp" android:text="Los intentos simulados no accionan una cerradura ni confirman su estado físico." />
+    </LinearLayout></com.google.android.material.card.MaterialCardView>
+   </LinearLayout>
+   <LinearLayout android:id="@+id/cardsSection" style="@style/SectionContent" android:visibility="gone">
+    <TextView style="@style/SectionTitle" android:text="Credenciales RFID" />
+    <TextView style="@style/BodyCopy" android:text="Registra, busca y revoca permisos de acceso." />
+    <EditText android:id="@+id/cardSearch" style="@style/FormField" android:hint="Buscar por nombre o UID" android:inputType="text" android:autofillHints="" />
+    <Button android:id="@+id/btnAddCard" style="@style/PrimaryAction" android:text="Agregar credencial" />
+    <TextView android:id="@+id/operationStatus" style="@style/BodyCopy" android:accessibilityLiveRegion="polite" />
+    <TextView android:id="@+id/cardCount" style="@style/Caption" />
+    <TextView android:id="@+id/cardsSync" style="@style/Caption" android:layout_marginBottom="16dp" />
+    <LinearLayout android:id="@+id/cardList" style="@style/SectionContent" />
+   </LinearLayout>
+   <LinearLayout android:id="@+id/historySection" style="@style/SectionContent" android:visibility="gone">
+    <TextView style="@style/SectionTitle" android:text="Historial de accesos" />
+    <TextView style="@style/BodyCopy" android:text="Selecciona un intento para consultar sus detalles." />
+    <Spinner android:id="@+id/eventFilter" android:layout_width="match_parent" android:layout_height="56dp" android:contentDescription="Filtrar historial por resultado u origen" />
+    <TextView android:id="@+id/historySync" style="@style/Caption" android:layout_marginBottom="16dp" />
+    <LinearLayout android:id="@+id/eventList" style="@style/SectionContent" />
+   </LinearLayout>
+   <LinearLayout android:id="@+id/auditSection" style="@style/SectionContent" android:visibility="gone">
+    <TextView style="@style/SectionTitle" android:text="Auditoría de cambios" />
+    <TextView style="@style/BodyCopy" android:text="Altas, habilitaciones y revocaciones con fecha y responsable. Últimos 50 registros." />
+    <LinearLayout android:id="@+id/auditList" style="@style/SectionContent" />
+   </LinearLayout>
+  </LinearLayout>
+  <Button android:id="@+id/btnLogout" style="@style/SecondaryAction" android:text="Cerrar sesión" />
+ </LinearLayout>
+</ScrollView>
