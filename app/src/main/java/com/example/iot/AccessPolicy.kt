@@ -1,6 +1,11 @@
 package com.example.iot
 
 object AccessPolicy {
+    fun uidFromBytes(bytes: ByteArray?): String? {
+        if (bytes == null || bytes.size !in listOf(4, 7, 10)) return null
+        val hex = bytes.joinToString("") { "%02X".format(java.util.Locale.ROOT, it.toInt() and 0xFF) }
+        return normalizeUid(hex)
+    }
     fun decision(exists: Boolean, enabled: Boolean): Pair<String, String> = decision(exists, enabled, false)
 
     fun decision(exists: Boolean, enabled: Boolean, deleted: Boolean): Pair<String, String> = when {

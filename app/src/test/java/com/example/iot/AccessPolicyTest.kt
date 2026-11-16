@@ -4,6 +4,15 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class AccessPolicyTest {
+    @Test fun nfcUidKeepsByteOrderLeadingZeroesAndUnsignedBytes() {
+        assertEquals("00047FFF", AccessPolicy.uidFromBytes(byteArrayOf(0, 4, 127, -1)))
+        assertEquals("04AABBCCDDEEFF", AccessPolicy.uidFromBytes(byteArrayOf(4, -86, -69, -52, -35, -18, -1)))
+        assertEquals("00000000000000000000", AccessPolicy.uidFromBytes(ByteArray(10)))
+    }
+    @Test fun nfcRejectsMissingOrUnsupportedIdentifiers() {
+        assertNull(AccessPolicy.uidFromBytes(null))
+        listOf(0, 1, 3, 5, 8, 11).forEach { assertNull(AccessPolicy.uidFromBytes(ByteArray(it))) }
+    }
     @Test fun deletedCredentialsNeverAllowAccessEvenIfEnabled() {
         assertEquals("RECHAZADO" to "ELIMINADA", AccessPolicy.decision(true, true, true))
         assertEquals("RECHAZADO" to "ELIMINADA", AccessPolicy.decision(true, false, true))

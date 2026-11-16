@@ -15,6 +15,13 @@ import org.junit.runner.RunWith
 /** Checks actual inflated XML and recycled row permissions without touching Firebase. */
 @RunWith(AndroidJUnit4::class)
 class CrudLayoutTest {
+    @Test fun nfcRecordsRoundTripAndRejectDifferentPhysicalIdentity() {
+        val original = NfcCredentialRecord.create("04A39C21")
+        val decoded = android.nfc.NdefMessage(android.nfc.NdefMessage(arrayOf(original)).toByteArray()).records.single()
+        assertTrue(NfcCredentialRecord.matches(decoded, "04A39C21"))
+        assertFalse(NfcCredentialRecord.matches(decoded, "FFFFFFFF"))
+        assertFalse(NfcCredentialRecord.matches(android.nfc.NdefRecord.createTextRecord("es", "04A39C21"), "04A39C21"))
+    }
     @Test fun credentialRowsExposeCrudAndDisableDeletedOrOfflineWrites() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         instrumentation.runOnMainSync {
@@ -51,6 +58,8 @@ class CrudLayoutTest {
             val inflater = LayoutInflater.from(context)
             val form = inflater.inflate(R.layout.dialog_credential, FrameLayout(context), false)
             assertNotNull(form.findViewById<EditText>(R.id.holderInput))
+            assertNotNull(form.findViewById<Button>(R.id.btnReadCredentialNfc))
+            assertNotNull(form.findViewById<Button>(R.id.btnWriteCredentialNfc))
             assertFalse(form.findViewById<EditText>(R.id.rfidInput).isSaveEnabled)
             val screen = inflater.inflate(R.layout.activity_main, FrameLayout(context), false)
             listOf(R.id.cardList, R.id.eventList, R.id.auditList).forEach {

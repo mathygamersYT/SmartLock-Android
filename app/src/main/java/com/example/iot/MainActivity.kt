@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
     private val subscriptions = mutableListOf<ListenerRegistration>()
     private var adminSubscription: ListenerRegistration? = null
-    private var authorized = false
+    @Volatile private var authorized = false
     private var device: DocumentSnapshot? = null
     private var deviceFromCache = true
     private var physicalEvents = emptyList<DocumentSnapshot>()

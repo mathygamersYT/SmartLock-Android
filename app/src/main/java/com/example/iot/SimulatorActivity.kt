@@ -23,6 +23,7 @@ class SimulatorActivity : AppCompatActivity() {
     private var admin = false
     private var simulator = false
     private var busy = false
+    private val nfcReader by lazy { NfcUidReader(this) }
     private var pendingId: String? = null
     private var pendingUid: String? = null
     private lateinit var uidInput: EditText
@@ -48,6 +49,16 @@ class SimulatorActivity : AppCompatActivity() {
         detail = findViewById(R.id.simDetail)
         findViewById<TextView>(R.id.simEmail).text = AccessPolicy.maskedEmail(auth.currentUser?.email)
         submit.setOnClickListener { simulate() }
+        findViewById<Button>(R.id.btnReadAccessNfc).setOnClickListener {
+            if (!busy && (admin || simulator)) nfcReader.read { uid ->
+                if (!busy && (admin || simulator)) {
+                    uidInput.setText(uid)
+                    uidInput.error = null
+                    result.text = getString(R.string.nfc_captured)
+                    detail.text = getString(R.string.nfc_validate_hint)
+                }
+            }
+        }
         findViewById<Button>(R.id.btnExampleActive).setOnClickListener { uidInput.setText("04:A3:9C:21") }
         findViewById<Button>(R.id.btnExampleUnknown).setOnClickListener { uidInput.setText("FF:FF:FF:FF") }
         findViewById<Button>(R.id.btnBackAdmin).setOnClickListener {
@@ -90,6 +101,8 @@ class SimulatorActivity : AppCompatActivity() {
 
     private fun updateAccess() {
         submit.isEnabled = (admin || simulator) && !busy
+        findViewById<Button>(R.id.btnReadAccessNfc).isEnabled = (admin || simulator) && !busy
+        if (!admin && !simulator) nfcReader.stop()
         findViewById<Button>(R.id.btnBackAdmin).visibility = if (admin) View.VISIBLE else View.GONE
         status.text = if (admin || simulator) getString(R.string.ui_punto_de_acceso_autorizado_firebase_conectado)
             else getString(R.string.ui_verificando_autorizacion_se_requiere_conexion_y_un_rol_)
@@ -119,6 +132,7 @@ class SimulatorActivity : AppCompatActivity() {
         val id = pendingId!!
         val started = SystemClock.elapsedRealtime()
         busy = true
+        findViewById<Button>(R.id.btnReadAccessNfc).isEnabled = false
         submit.isEnabled = false
         uidInput.isEnabled = false
         findViewById<ProgressBar>(R.id.simProgress).visibility = View.VISIBLE

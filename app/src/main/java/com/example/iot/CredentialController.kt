@@ -18,10 +18,11 @@ class CredentialController(private val activity: AppCompatActivity,
     private var documents = emptyList<DocumentSnapshot>()
     private var cached = true
     private var busy = false
+    private val nfcReader = NfcUidReader(activity)
     private fun getString(id: Int, vararg args: Any) = activity.getString(id, *args)
     private fun status(message: String) { activity.findViewById<TextView>(R.id.operationStatus).text = message }
 
-    fun clear() { documents = emptyList(); cached = true; adapter.submitList(emptyList()) }
+    fun clear() { nfcReader.stop(); documents = emptyList(); cached = true; adapter.submitList(emptyList()) }
     fun update(rows: List<DocumentSnapshot>, fromCache: Boolean) { documents = rows; cached = fromCache; render() }
     fun render() {
         if (!authorized()) return
@@ -69,8 +70,27 @@ class CredentialController(private val activity: AppCompatActivity,
         // UID is immutable and partially hidden while editing.
         uid.setText(row?.let { AccessPolicy.maskedUid(it.uid) }.orEmpty())
         uid.isEnabled = row == null
+        view.findViewById<Button>(R.id.btnWriteCredentialNfc).apply {
+            visibility = if (row != null) View.VISIBLE else View.GONE
+            setOnClickListener {
+                if (row != null && !row.deleted && authorized() && !cached && !busy) {
+                    nfcReader.write(row.uid, { authorized() && !cached && !busy }) {
+                        if (authorized()) view.findViewById<TextView>(R.id.nfcWriteStatus).setText(R.string.nfc_written)
+                    }
+                }
+            }
+        }
+        view.findViewById<Button>(R.id.btnReadCredentialNfc).apply {
+            visibility = if (row == null) View.VISIBLE else View.GONE
+            setOnClickListener {
+                if (authorized()) nfcReader.read { value ->
+                    if (authorized()) { uid.setText(value); uid.error = null; name.requestFocus() }
+                }
+            }
+        }
         val dialog = AlertDialog.Builder(activity).setTitle(if (row == null) R.string.add_card else R.string.edit_holder)
             .setView(view).setNegativeButton(R.string.cancel, null).setPositiveButton(R.string.save, null).create()
+        dialog.setOnDismissListener { nfcReader.stop() }
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 val holder = name.text.toString().trim()

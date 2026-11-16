@@ -10,6 +10,10 @@
                 <TextView style="@style/Eyebrow" android:text="@string/ui_simulacion_sin_accionamiento_fisico" />
                 <TextView style="@style/SectionTitle" android:text="@string/ui_presenta_tu_credencial" />
                 <EditText android:id="@+id/simUid" style="@style/FormField" android:hint="@string/ui_uid_rfid_04_a3_9c_21" android:inputType="textCapCharacters" android:saveEnabled="false" android:importantForAutofill="no" />
+                <Button android:id="@+id/btnReadAccessNfc"
+                    style="@style/SecondaryAction"
+                    android:text="@string/nfc_read"
+                    android:enabled="false" />
                 <TextView style="@style/Caption" android:text="@string/ui_ejemplos_de_prueba_el_resultado_depende_de_las_credenci" />
                 <Button android:id="@+id/btnExampleActive" style="@style/SecondaryAction" android:text="@string/ui_usar_uid_de_valentina" />
                 <Button android:id="@+id/btnExampleUnknown" style="@style/SecondaryAction" android:text="@string/ui_usar_uid_ffffffff" />

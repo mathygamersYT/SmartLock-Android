@@ -1,4 +1,24 @@
 <resources>
+    <string name="nfc_write">Grabar identificación en tarjeta NFC</string>
+    <string name="nfc_write_confirmation">Se reemplazará el contenido NDEF de la tarjeta por su identificación Smart Lock. Usa una tarjeta propia dedicada al proyecto. No cambia el UID de fábrica ni concede acceso por sí sola.</string>
+    <string name="nfc_write_approach">Acerca la misma tarjeta registrada y mantenla quieta hasta completar la grabación.</string>
+    <string name="nfc_wrong_card">La tarjeta acercada no corresponde al UID de esta credencial. No se grabó.</string>
+    <string name="nfc_read_only">La tarjeta es de solo lectura. No se puede grabar.</string>
+    <string name="nfc_no_space">La tarjeta no tiene espacio suficiente para la identificación Smart Lock.</string>
+    <string name="nfc_not_ndef">Esta tarjeta no admite grabación NDEF en este teléfono. Puedes leer su UID y usarlo como credencial.</string>
+    <string name="nfc_write_failed">No se pudo confirmar la grabación. Mantén la tarjeta quieta y vuelve a leerla antes de reintentar.</string>
+    <string name="nfc_written">Identificación grabada. Retira la tarjeta y vuelve a leerla para comprobarla. La autorización depende de Firebase.</string>
+    <string name="nfc_identity_mismatch">Los datos Smart Lock almacenados no coinciden con el UID físico de la tarjeta. Revisa su registro.</string>
+    <string name="nfc_title">Lectura NFC</string>
+    <string name="nfc_read">Leer tarjeta por NFC</string>
+    <string name="nfc_missing">Este teléfono no tiene NFC. Puedes ingresar el UID manualmente.</string>
+    <string name="nfc_disabled">Activa NFC en los ajustes y vuelve a pulsar Leer tarjeta por NFC.</string>
+    <string name="nfc_settings">Abrir ajustes NFC</string>
+    <string name="nfc_approach">Acerca una tarjeta compatible a la parte trasera del teléfono. Se leerá su UID.</string>
+    <string name="nfc_incompatible">La tarjeta no tiene un UID compatible. Usa una credencial de 4, 7 o 10 bytes.</string>
+    <string name="nfc_error">No se pudo iniciar NFC. Revisa que esté activo y vuelve a intentarlo.</string>
+    <string name="nfc_captured">UID capturado por NFC</string>
+    <string name="nfc_validate_hint">Pulsa Simular lectura para validar este UID en Firebase. Esta prueba no abre una cerradura física.</string>
     <string name="origin_simulated">SIMULACIÓN</string>
     <string name="origin_physical">DISPOSITIVO FÍSICO</string>
     <string name="credential_deleted">Eliminada</string>
