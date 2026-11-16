@@ -1,4 +1,12 @@
 <resources>
+    <string name="google_continue">Continuar con Google</string>
+    <string name="google_registration_hint">Inicia sesión o crea tu cuenta con Google. El permiso de administrador se asigna por separado.</string>
+    <string name="google_server_client_id" translatable="false">602184749128-88q33e0kjussmkrshd1eafdktd64lm59.apps.googleusercontent.com</string>
+    <string name="google_cancelled">Acceso con Google cancelado. Puedes volver a intentarlo.</string>
+    <string name="google_no_account">No hay una cuenta de Google disponible. Agrega una cuenta al teléfono y vuelve a intentarlo.</string>
+    <string name="google_provider_error">No se pudo acceder con Google. Revisa internet, los Servicios de Google Play y la configuración de la app.</string>
+    <string name="google_firebase_failed">Google no pudo completar el acceso a Firebase. Revisa la conexión y vuelve a intentarlo.</string>
+    <string name="google_existing_account">Ya existe una cuenta con otro método de acceso. Inicia sesión con ese método; no se cambiarán sus permisos.</string>
     <string name="nfc_write">Grabar identificación en tarjeta NFC</string>
     <string name="nfc_write_confirmation">Se reemplazará el contenido NDEF de la tarjeta por su identificación Smart Lock. Usa una tarjeta propia dedicada al proyecto. No cambia el UID de fábrica ni concede acceso por sí sola.</string>
     <string name="nfc_write_approach">Acerca la misma tarjeta registrada y mantenla quieta hasta completar la grabación.</string>

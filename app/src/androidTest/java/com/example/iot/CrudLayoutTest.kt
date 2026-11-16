@@ -15,6 +15,20 @@ import org.junit.runner.RunWith
 /** Checks actual inflated XML and recycled row permissions without touching Firebase. */
 @RunWith(AndroidJUnit4::class)
 class CrudLayoutTest {
+    @Test fun loginExposesGoogleAlongsideEmailAndPassword() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        instrumentation.runOnMainSync {
+            val context = ContextThemeWrapper(instrumentation.targetContext, R.style.Theme_IoT)
+            val screen = LayoutInflater.from(context).inflate(R.layout.activity_login, FrameLayout(context), false)
+            val google = screen.findViewById<Button>(R.id.btnGoogleLogin)
+            assertNotNull(google)
+            assertTrue(google.isEnabled)
+            assertEquals(context.getString(R.string.google_continue), google.text.toString())
+            assertNotNull(screen.findViewById<Button>(R.id.btnLogin))
+            assertNotNull(screen.findViewById<Button>(R.id.btnRegister))
+            assertTrue(context.getString(R.string.google_server_client_id).endsWith(".apps.googleusercontent.com"))
+        }
+    }
     @Test fun nfcRecordsRoundTripAndRejectDifferentPhysicalIdentity() {
         val original = NfcCredentialRecord.create("04A39C21")
         val decoded = android.nfc.NdefMessage(android.nfc.NdefMessage(arrayOf(original)).toByteArray()).records.single()

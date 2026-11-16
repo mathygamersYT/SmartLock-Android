@@ -15,6 +15,13 @@ import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.GoogleAuthProvider
+import androidx.credentials.exceptions.GetCredentialCancellationException
+import androidx.credentials.exceptions.GetCredentialException
+import androidx.credentials.exceptions.NoCredentialException
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
 
 class LoginActivity : AppCompatActivity() {
     private val auth by lazy { FirebaseAuth.getInstance() }
@@ -24,6 +31,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var progress: ProgressBar
     private lateinit var actions: List<Button>
     private var busy = false
+    private var openingMain = false
+    private val google by lazy { GoogleAccountLogin(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +53,9 @@ class LoginActivity : AppCompatActivity() {
         val signIn = findViewById<Button>(R.id.btnLogin)
         val register = findViewById<Button>(R.id.btnRegister)
         val reset = findViewById<Button>(R.id.btnResetPassword)
-        actions = listOf(signIn, register, reset)
+        val googleButton = findViewById<Button>(R.id.btnGoogleLogin)
+        actions = listOf(signIn, register, reset, googleButton)
+        googleButton.setOnClickListener { authenticateGoogle() }
         signIn.setOnClickListener { authenticate(false) }
         register.setOnClickListener { authenticate(true) }
         reset.setOnClickListener { resetPassword() }
@@ -63,6 +74,44 @@ class LoginActivity : AppCompatActivity() {
             return null
         }
         return value
+    }
+
+    private fun authenticateGoogle() {
+        if (busy) return
+        setBusy(true)
+        lifecycleScope.launch {
+            try {
+                val token = google.idToken()
+                auth.signInWithCredential(GoogleAuthProvider.getCredential(token, null))
+                    .addOnCompleteListener { task ->
+                        if (isFinishing || isDestroyed) return@addOnCompleteListener
+                        setBusy(false)
+                        if (task.isSuccessful) {
+                            password.text.clear()
+                            openMain()
+                        } else {
+                            status.text = if ((task.exception as? FirebaseAuthException)?.errorCode ==
+                                "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL")
+                                getString(R.string.google_existing_account)
+                            else getString(R.string.google_firebase_failed)
+                        }
+                    }
+            } catch (_: GetCredentialCancellationException) {
+                setBusy(false)
+                status.text = getString(R.string.google_cancelled)
+            } catch (_: NoCredentialException) {
+                setBusy(false)
+                status.text = getString(R.string.google_no_account)
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: GetCredentialException) {
+                setBusy(false)
+                status.text = getString(R.string.google_provider_error)
+            } catch (_: Exception) {
+                setBusy(false)
+                status.text = getString(R.string.google_provider_error)
+            }
+        }
     }
 
     private fun authenticate(register: Boolean) {
@@ -128,6 +177,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun openMain() {
+        if (openingMain || isFinishing || isDestroyed) return
+        openingMain = true
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }

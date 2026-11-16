@@ -97,8 +97,7 @@ class MainActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
         findViewById<Button>(R.id.btnLogout).setOnClickListener {
-            auth.signOut()
-            openLogin()
+            GoogleAccountLogin.signOut(this) { openLogin() }
         }
         addCard.setOnClickListener { credentials.add() }
         refresh.setOnClickListener { watchAdministrator() }

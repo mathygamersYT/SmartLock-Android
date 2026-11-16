@@ -66,8 +66,7 @@ class SimulatorActivity : AppCompatActivity() {
             finish()
         }
         findViewById<Button>(R.id.btnSimLogout).setOnClickListener {
-            auth.signOut()
-            login()
+            GoogleAccountLogin.signOut(this) { login() }
         }
     }
 
