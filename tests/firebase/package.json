@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "test": "firebase emulators:exec --project demo-smartlock --only firestore,auth \"node --test rules.test.mjs\""
+    "test": "firebase emulators:exec --project demo-smartlock --only firestore,auth \"node --test rules.test.mjs\"",
+    "pretest": "node -e \"require('node:fs').copyFileSync('../../firestore.rules','firestore.test.rules')\""
   },
   "name": "smart-lock-firebase-tests",
   "devDependencies": {

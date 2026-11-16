@@ -4,6 +4,10 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class AccessPolicyTest {
+    @Test fun deletedCredentialsNeverAllowAccessEvenIfEnabled() {
+        assertEquals("RECHAZADO" to "ELIMINADA", AccessPolicy.decision(true, true, true))
+        assertEquals("RECHAZADO" to "ELIMINADA", AccessPolicy.decision(true, false, true))
+    }
     @Test fun simulationDistinguishesUnknownRevokedAndActive() {
         assertEquals("RECHAZADO" to "DESCONOCIDA", AccessPolicy.decision(false, false))
         assertEquals("RECHAZADO" to "DESCONOCIDA", AccessPolicy.decision(false, true))

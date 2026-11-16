@@ -1,8 +1,11 @@
 package com.example.iot
 
 object AccessPolicy {
-    fun decision(exists: Boolean, enabled: Boolean): Pair<String, String> = when {
+    fun decision(exists: Boolean, enabled: Boolean): Pair<String, String> = decision(exists, enabled, false)
+
+    fun decision(exists: Boolean, enabled: Boolean, deleted: Boolean): Pair<String, String> = when {
         !exists -> "RECHAZADO" to "DESCONOCIDA"
+        deleted -> "RECHAZADO" to "ELIMINADA"
         enabled -> "PERMITIDO" to "ACTIVA"
         else -> "RECHAZADO" to "REVOCADA"
     }

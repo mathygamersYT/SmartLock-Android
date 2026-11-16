@@ -66,7 +66,7 @@ test('admin can revoke only with matching audit in the same transaction',async()
  const db=database('admin');
  await assertFails(updateDoc(doc(db,'tarjetas/04A39C21'),{habilitada:false,actualizadaEn:serverTimestamp(),actualizadaPor:'admin',ultimaOperacion:'zyxwvutsrqponmlkjihg'}));
  const batch=writeBatch(db);
- batch.update(doc(db,'tarjetas/04A39C21'),{habilitada:false,actualizadaEn:serverTimestamp(),actualizadaPor:'admin',ultimaOperacion:'zyxwvutsrqponmlkjihg'});
+ batch.update(doc(db,'tarjetas/04A39C21'),{habilitada:false,eliminada:false,actualizadaEn:serverTimestamp(),actualizadaPor:'admin',ultimaOperacion:'zyxwvutsrqponmlkjihg'});
  batch.set(doc(db,'auditoria/zyxwvutsrqponmlkjihg'),{actorUid:'admin',tarjetaUid:'04A39C21',accion:'REVOCAR',fecha:serverTimestamp()});
  await assertSucceeds(batch.commit());
  await assertFails(setDoc(doc(database('sim'),'eventosSimulados/'+id),event()));
@@ -88,4 +88,88 @@ test('administrator can provision and revoke simulator, simulator cannot self-re
  await assertFails(setDoc(doc(database('sim'),'simuladores/sim'),{activo:true,habilitadoPor:'sim',fecha:serverTimestamp()}));
  await assertSucceeds(setDoc(ref,{activo:true,habilitadoPor:'admin',fecha:serverTimestamp()}));
  await assertSucceeds(setDoc(doc(database('sim'),'eventosSimulados/'+id),event()));
+});
+
+let sequence = 0;
+async function changeCard(db, uid, changes, action) {
+ const op = String(++sequence).padStart(20, '0');
+ const batch = writeBatch(db);
+ batch.update(doc(db,'tarjetas/'+uid), {
+  ...changes, eliminada: changes.eliminada ?? false,
+  actualizadaEn:serverTimestamp(), actualizadaPor:'admin', ultimaOperacion:op
+ });
+ batch.set(doc(db,'auditoria/'+op), {
+  actorUid:'admin',tarjetaUid:uid,accion:action,fecha:serverTimestamp()
+ });
+ return batch.commit();
+}
+
+test('administrator creates and reads a credential with mandatory audit', async()=>{
+ const db=database('admin'), uid='AABBCCDD', op='00000000000000009999';
+ const card={nombre:'Titular nuevo',habilitada:true,eliminada:false,
+  fechaCreacion:serverTimestamp(),actualizadaEn:serverTimestamp(),actualizadaPor:'admin',ultimaOperacion:op};
+ await assertFails(setDoc(doc(db,'tarjetas/'+uid),card));
+ const b=writeBatch(db);
+ b.set(doc(db,'tarjetas/'+uid),card);
+ b.set(doc(db,'auditoria/'+op),{actorUid:'admin',tarjetaUid:uid,accion:'ALTA',fecha:serverTimestamp()});
+ await assertSucceeds(b.commit());
+ assert.equal((await getDoc(doc(db,'tarjetas/'+uid))).data().nombre,'Titular nuevo');
+});
+
+test('editing a holder preserves a concurrent revoked state and the original identity',async()=>{
+ const db=database('admin');
+ await assertSucceeds(changeCard(db,'04A39C21',{habilitada:false},'REVOCAR'));
+ await assertSucceeds(changeCard(db,'04A39C21',{nombre:'Nombre corregido'},'EDITAR'));
+ const card=(await getDoc(doc(db,'tarjetas/04A39C21'))).data();
+ assert.equal(card.nombre,'Nombre corregido');
+ assert.equal(card.habilitada,false);
+ await assertFails(changeCard(db,'04A39C21',{nombre:'',habilitada:false},'EDITAR'));
+ await assertFails(changeCard(db,'04A39C21',{nombre:'Otro',habilitada:true},'EDITAR'));
+});
+
+test('logical deletion preserves historical events, is permanent, and blocks new access',async()=>{
+ const db=database('admin'), sim=database('sim');
+ await assertSucceeds(setDoc(doc(sim,'eventosSimulados/'+id),event()));
+ await assertSucceeds(changeCard(db,'04A39C21',{eliminada:true,habilitada:false},'ELIMINAR'));
+ assert.equal((await getDoc(doc(db,'tarjetas/04A39C21'))).data().eliminada,true);
+ assert.equal((await getDoc(doc(db,'eventosSimulados/'+id))).data().resultado,'PERMITIDO');
+ await assertFails(changeCard(db,'04A39C21',{eliminada:false,habilitada:true},'HABILITAR'));
+ await assertFails(deleteDoc(doc(db,'tarjetas/04A39C21')));
+ const next='11111111111111111111111111111111';
+ await assertFails(setDoc(doc(sim,'eventosSimulados/'+next),event()));
+ await assertFails(setDoc(doc(sim,'eventosSimulados/'+next),event('sim','RECHAZADO','REVOCADA')));
+ await assertSucceeds(setDoc(doc(sim,'eventosSimulados/'+next),event('sim','RECHAZADO','ELIMINADA')));
+});
+
+test('simulator and ordinary accounts cannot edit or delete credentials',async()=>{
+ for(const actor of ['sim','ordinary']) {
+  const db=database(actor);
+  await assertFails(changeCard(db,'04A39C21',{nombre:'Intruso'},'EDITAR'));
+  await assertFails(changeCard(db,'04A39C21',{eliminada:true,habilitada:false},'ELIMINAR'));
+  await assertFails(deleteDoc(doc(db,'tarjetas/04A39C21')));
+ }
+});
+
+test('administrator cannot edit or delete without matching audit or rewrite audit',async()=>{
+ const db=database('admin');
+ await assertFails(updateDoc(doc(db,'tarjetas/04A39C21'),{
+  nombre:'Sin auditoría',actualizadaEn:serverTimestamp(),actualizadaPor:'admin',
+  ultimaOperacion:'00000000000000008888',eliminada:false
+ }));
+ await assertFails(changeCard(db,'04A39C21',{eliminada:true,habilitada:false},'EDITAR'));
+ await assertSucceeds(changeCard(db,'04A39C21',{nombre:'Con auditoría'},'EDITAR'));
+ const logs=await getDocs(collection(db,'auditoria'));
+ const ref=logs.docs[0].ref;
+ await assertFails(updateDoc(ref,{accion:'ALTA'}));
+ await assertFails(deleteDoc(ref));
+});
+
+test('legacy classroom collections are closed for every client role',async()=>{
+ for(const actor of [null,'ordinary','sim','admin']) {
+  for(const collection of ['personas','usuarios']) {
+   const ref=doc(database(actor),collection+'/prueba');
+   await assertFails(getDoc(ref));
+   await assertFails(setDoc(ref,{nombre:'Prueba'}));
+  }
+ }
 });

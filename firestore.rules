@@ -30,10 +30,10 @@ service cloud.firestore {
       function validCard() {
         let d = request.resource.data;
         return uid.matches('^([0-9A-F]{8}|[0-9A-F]{14}|[0-9A-F]{20})$')
-          && d.keys().hasAll(['nombre', 'habilitada', 'actualizadaEn', 'actualizadaPor', 'ultimaOperacion', 'fechaCreacion'])
-          && d.keys().hasOnly(['nombre', 'habilitada', 'actualizadaEn', 'actualizadaPor', 'ultimaOperacion', 'fechaCreacion'])
+          && d.keys().hasAll(['nombre', 'habilitada', 'actualizadaEn', 'actualizadaPor', 'ultimaOperacion', 'fechaCreacion', 'eliminada'])
+          && d.keys().hasOnly(['nombre', 'habilitada', 'actualizadaEn', 'actualizadaPor', 'ultimaOperacion', 'fechaCreacion', 'eliminada'])
           && d.nombre is string && d.nombre.size() > 0 && d.nombre.size() <= 80
-          && d.habilitada is bool
+          && d.habilitada is bool && d.eliminada is bool
           && d.actualizadaEn == request.time
           && d.actualizadaPor == request.auth.uid
           && d.ultimaOperacion is string
@@ -49,12 +49,22 @@ service cloud.firestore {
       allow list: if admin();
       allow create: if admin() && validCard()
         && request.resource.data.fechaCreacion == request.time
-        && request.resource.data.habilitada == true && audited('ALTA');
+        && request.resource.data.habilitada == true
+        && request.resource.data.eliminada == false && audited('ALTA');
       allow update: if admin() && validCard()
         && request.resource.data.fechaCreacion == resource.data.fechaCreacion
-        && request.resource.data.nombre == resource.data.nombre
+        && resource.data.get('eliminada', false) == false
         && request.resource.data.ultimaOperacion != resource.data.ultimaOperacion
-        && audited(request.resource.data.habilitada ? 'HABILITAR' : 'REVOCAR');
+        && (
+          (request.resource.data.eliminada == true
+            && request.resource.data.habilitada == false
+            && request.resource.data.nombre == resource.data.nombre && audited('ELIMINAR'))
+          || (request.resource.data.eliminada == false
+            && request.resource.data.habilitada == resource.data.habilitada && audited('EDITAR'))
+          || (request.resource.data.eliminada == false
+            && request.resource.data.nombre == resource.data.nombre
+            && audited(request.resource.data.habilitada ? 'HABILITAR' : 'REVOCAR'))
+        );
       allow delete: if false;
     }
     match /auditoria/{id} {
@@ -63,7 +73,7 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(['actorUid', 'tarjetaUid', 'accion', 'fecha'])
         && request.resource.data.actorUid == request.auth.uid
         && request.resource.data.tarjetaUid is string
-        && request.resource.data.accion in ['ALTA', 'HABILITAR', 'REVOCAR']
+        && request.resource.data.accion in ['ALTA', 'EDITAR', 'HABILITAR', 'REVOCAR', 'ELIMINAR']
         && request.resource.data.fecha == request.time;
       allow update, delete: if false;
     }
@@ -73,7 +83,9 @@ service cloud.firestore {
         let path = /databases/$(database)/documents/tarjetas/$(d.uidRFID);
         return !exists(path)
           ? d.resultado == 'RECHAZADO' && d.motivo == 'DESCONOCIDA'
-          : (get(path).data.habilitada == true
+          : (get(path).data.get('eliminada', false) == true
+            ? d.resultado == 'RECHAZADO' && d.motivo == 'ELIMINADA'
+            : get(path).data.habilitada == true
             ? d.resultado == 'PERMITIDO' && d.motivo == 'ACTIVA'
             : d.resultado == 'RECHAZADO' && d.motivo == 'REVOCADA');
       }
@@ -102,14 +114,9 @@ service cloud.firestore {
       allow read: if admin();
       allow write: if false;
     }
-    // Preserve the two existing classroom exercises and their original expiry.
-    // Smart Lock uses the explicit protected collections above.
-    match /personas/{document=**} {
-      allow read, write: if request.time < timestamp.date(2026, 12, 2);
-    }
-    match /usuarios/{document=**} {
-      allow read, write: if request.time < timestamp.date(2026, 12, 2);
-    }
+    // Classroom exercises are closed; no anonymous or authenticated client access.
+    match /personas/{document=**} { allow read, write: if false; }
+    match /usuarios/{document=**} { allow read, write: if false; }
     match /{document=**} { allow read, write: if false; }
   }
 }

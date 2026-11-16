@@ -1,1 +1,17 @@
-{"firestore":{"rules":"../../firestore.rules"},"emulators":{"firestore":{"port":8085},"auth":{"port":9095},"ui":{"enabled":false},"singleProjectMode":true}}
+{
+  "firestore": {
+    "rules": "firestore.test.rules"
+  },
+  "emulators": {
+    "firestore": {
+      "port": 8085
+    },
+    "auth": {
+      "port": 9095
+    },
+    "ui": {
+      "enabled": false
+    },
+    "singleProjectMode": true
+  }
+}
