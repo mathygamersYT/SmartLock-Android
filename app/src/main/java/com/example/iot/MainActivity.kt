@@ -7,7 +7,8 @@ import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.TextView
 import android.widget.Spinner
 import android.widget.ArrayAdapter
@@ -33,19 +34,19 @@ class MainActivity : AppCompatActivity() {
     private val subscriptions = mutableListOf<ListenerRegistration>()
     private var adminSubscription: ListenerRegistration? = null
     private var authorized = false
-    private var busy = false
     private var device: DocumentSnapshot? = null
     private var deviceFromCache = true
-    private var cardDocuments = emptyList<DocumentSnapshot>()
     private var physicalEvents = emptyList<DocumentSnapshot>()
     private var simulatedEvents = emptyList<DocumentSnapshot>()
-    private var cardsCached = true
-    private var eventFilter = "Todos"
+    private var eventFilter = 0
     private lateinit var content: View
     private lateinit var accessStatus: TextView
     private lateinit var operationStatus: TextView
-    private lateinit var cards: LinearLayout
-    private lateinit var events: LinearLayout
+    private lateinit var credentials: CredentialController
+    private val eventAdapter = RecordAdapter { row ->
+        AlertDialog.Builder(this).setTitle(row.title).setMessage(row.dialog).setPositiveButton(R.string.close, null).show()
+    }
+    private val auditAdapter = RecordAdapter()
     private lateinit var addCard: Button
     private lateinit var refresh: Button
     private val handler = Handler(Looper.getMainLooper())
@@ -62,8 +63,15 @@ class MainActivity : AppCompatActivity() {
         content = findViewById(R.id.adminContent)
         accessStatus = findViewById(R.id.accessStatus)
         operationStatus = findViewById(R.id.operationStatus)
-        cards = findViewById(R.id.cardList)
-        events = findViewById(R.id.eventList)
+        credentials = CredentialController(this, repository) { authorized }
+        listOf(R.id.cardList to credentials.adapter, R.id.eventList to eventAdapter, R.id.auditList to auditAdapter)
+            .forEach { (id, listAdapter) ->
+                findViewById<RecyclerView>(id).apply {
+                    layoutManager = LinearLayoutManager(this@MainActivity)
+                    adapter = listAdapter
+                }
+            }
+        findViewById<android.widget.CheckBox>(R.id.showDeleted).setOnCheckedChangeListener { _, _ -> credentials.render() }
         addCard = findViewById(R.id.btnAddCard)
         refresh = findViewById(R.id.btnRefreshAccess)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { view, insets ->
@@ -72,18 +80,18 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         findViewById<TextView>(R.id.sessionEmail).text = AccessPolicy.maskedEmail(auth.currentUser?.email)
-        findViewById<TextView>(R.id.accountUid).text = "UID de cuenta: " + auth.currentUser?.uid.orEmpty()
+        findViewById<TextView>(R.id.accountUid).text = getString(R.string.ui_uid_de_cuenta) + auth.currentUser?.uid.orEmpty()
         findViewById<Button>(R.id.btnSimulator).setOnClickListener {
             startActivity(Intent(this, SimulatorActivity::class.java))
         }
         findViewById<Button>(R.id.btnPairSimulator).setOnClickListener { manageSimulator() }
-        findViewById<EditText>(R.id.cardSearch).addTextChangedListener { renderCards() }
+        findViewById<EditText>(R.id.cardSearch).addTextChangedListener { credentials.render() }
         val filter = findViewById<Spinner>(R.id.eventFilter)
         filter.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item,
-            listOf("Todos", "Permitidos", "Rechazados", "Simulados", "Físicos"))
+            listOf(getString(R.string.ui_todos), getString(R.string.ui_permitidos), getString(R.string.ui_rechazados), getString(R.string.ui_simulados), getString(R.string.ui_fisicos)))
         filter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                eventFilter = parent?.getItemAtPosition(position).toString()
+                eventFilter = position
                 renderEvents()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
@@ -92,9 +100,9 @@ class MainActivity : AppCompatActivity() {
             auth.signOut()
             openLogin()
         }
-        addCard.setOnClickListener { showAddCard() }
+        addCard.setOnClickListener { credentials.add() }
         refresh.setOnClickListener { watchAdministrator() }
-        listOf("Resumen" to R.id.summarySection, "Tarjetas" to R.id.cardsSection, "Historial" to R.id.historySection, "Auditoría" to R.id.auditSection)
+        listOf(getString(R.string.ui_resumen) to R.id.summarySection, getString(R.string.ui_tarjetas) to R.id.cardsSection, getString(R.string.ui_historial) to R.id.historySection, getString(R.string.ui_auditoria) to R.id.auditSection)
             .zip(listOf(R.id.tabSummary, R.id.tabCards, R.id.tabHistory, R.id.tabAudit))
             .forEach { (section, buttonId) ->
                 findViewById<Button>(buttonId).setOnClickListener {
@@ -127,7 +135,7 @@ class MainActivity : AppCompatActivity() {
         val user = auth.currentUser ?: return openLogin()
         adminSubscription?.remove()
         stopData()
-        accessStatus.text = "Verificando permiso de administrador…"
+        accessStatus.text = getString(R.string.ui_verificando_permiso_de_administrador)
         adminSubscription = repository.db.collection("administradores").document(user.uid)
             .addSnapshotListener(MetadataChanges.INCLUDE) { snapshot, error ->
                 if (isFinishing || isDestroyed) return@addSnapshotListener
@@ -136,9 +144,9 @@ class MainActivity : AppCompatActivity() {
                     accessStatus.text = readError(error)
                 } else if (snapshot == null || snapshot.metadata.isFromCache) {
                     stopData()
-                    accessStatus.text = "Conecta a internet para verificar tu autorización."
+                    accessStatus.text = getString(R.string.ui_conecta_a_internet_para_verificar_tu_autorizacion)
                 } else if (snapshot.getBoolean("activo") == true) {
-                    accessStatus.text = "Administrador autorizado"
+                    accessStatus.text = getString(R.string.ui_administrador_autorizado)
                     findViewById<View>(R.id.rolePanel).visibility = View.GONE
                     if (!authorized) {
                         authorized = true
@@ -147,7 +155,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 } else {
                     stopData()
-                    accessStatus.text = "Tu cuenta no tiene permiso de administrador. Solicita la habilitación al responsable del proyecto."
+                    accessStatus.text = getString(R.string.ui_tu_cuenta_no_tiene_permiso_de_administrador_solicita_la)
                 }
             }
     }
@@ -158,10 +166,9 @@ class MainActivity : AppCompatActivity() {
         subscriptions.clear()
         content.visibility = View.GONE
         findViewById<View>(R.id.rolePanel).visibility = View.VISIBLE
-        cards.removeAllViews()
-        events.removeAllViews()
-        findViewById<LinearLayout>(R.id.auditList).removeAllViews()
-        cardDocuments = emptyList()
+        credentials.clear()
+        eventAdapter.submitList(emptyList())
+        auditAdapter.submitList(emptyList())
         physicalEvents = emptyList()
         simulatedEvents = emptyList()
         device = null
@@ -174,7 +181,7 @@ class MainActivity : AppCompatActivity() {
                 if (error != null) {
                     device = null
                     findViewById<TextView>(R.id.deviceStatus).text = readError(error)
-                    findViewById<TextView>(R.id.doorStatus).text = "Puerta: sin datos"
+                    findViewById<TextView>(R.id.doorStatus).text = getString(R.string.ui_puerta_sin_datos)
                 } else {
                     device = snapshot
                     deviceFromCache = snapshot?.metadata?.isFromCache != false
@@ -184,11 +191,10 @@ class MainActivity : AppCompatActivity() {
         subscriptions += repository.db.collection("tarjetas").orderBy("nombre").limit(100)
             .addSnapshotListener(MetadataChanges.INCLUDE) { snapshot, error ->
                 if (!authorized) return@addSnapshotListener
-                cardDocuments = snapshot?.documents.orEmpty()
-                cardsCached = snapshot?.metadata?.isFromCache != false
-                renderCards()
+                val cardsCached = snapshot?.metadata?.isFromCache != false
+                credentials.update(snapshot?.documents.orEmpty(), cardsCached)
                 findViewById<TextView>(R.id.cardsSync).text = if (error != null) readError(error)
-                    else if (cardsCached) "Lista guardada · sin confirmación del servidor" else "Credenciales actualizadas en Firebase"
+                    else if (cardsCached) getString(R.string.ui_lista_guardada_sin_confirmacion_del_servidor) else getString(R.string.ui_credenciales_actualizadas_en_firebase)
             }
         listOf("eventos", "eventosSimulados").forEach { collection ->
             subscriptions += repository.db.collection(collection).orderBy("fecha", Query.Direction.DESCENDING).limit(50)
@@ -198,175 +204,95 @@ class MainActivity : AppCompatActivity() {
                     else simulatedEvents = snapshot?.documents.orEmpty()
                     renderEvents()
                     findViewById<TextView>(R.id.historySync).text = if (error != null) readError(error)
-                        else if (snapshot?.metadata?.isFromCache != false) "Historial guardado · sin confirmar con el servidor"
-                        else "Hasta 50 eventos por origen · hora local del teléfono"
+                        else if (snapshot?.metadata?.isFromCache != false) getString(R.string.ui_historial_guardado_sin_confirmar_con_el_servidor)
+                        else getString(R.string.ui_hasta_50_eventos_por_origen_hora_local_del_telefono)
                 }
         }
         subscriptions += repository.db.collection("auditoria").orderBy("fecha", Query.Direction.DESCENDING).limit(50)
             .addSnapshotListener(MetadataChanges.INCLUDE) { snapshot, error ->
                 if (!authorized) return@addSnapshotListener
-                val list = findViewById<LinearLayout>(R.id.auditList)
-                list.removeAllViews()
-                if (error != null) { label(list, readError(error)); return@addSnapshotListener }
-                if (snapshot == null || snapshot.isEmpty) label(list, "Aún no hay cambios administrativos.")
-                snapshot?.documents?.forEach { doc ->
-                    val action = when (doc.getString("accion")) { "ALTA" -> "Credencial registrada"; "REVOCAR" -> "Acceso revocado"; else -> "Credencial habilitada" }
-                    val row = tile(list)
-                    label(row, action, 18f)
-                    label(row, AccessPolicy.maskedUid(doc.getString("tarjetaUid").orEmpty()) + " · " + formatDate(doc.getTimestamp("fecha")?.toDate()))
-                    label(row, "Responsable: " + doc.getString("actorUid").orEmpty().take(12))
+                findViewById<TextView>(R.id.auditEmpty).apply {
+                    visibility = if (error != null || snapshot == null || snapshot.isEmpty) View.VISIBLE else View.GONE
+                    text = if (error != null) readError(error) else getString(R.string.audit_empty)
                 }
+                auditAdapter.submitList(if (error != null) emptyList() else snapshot?.documents.orEmpty().map { doc ->
+                    val action = when (doc.getString("accion")) {
+                        "ALTA" -> getString(R.string.ui_credencial_registrada)
+                        "EDITAR" -> getString(R.string.ui_titular_actualizado)
+                        "ELIMINAR" -> getString(R.string.ui_credencial_eliminada)
+                        "REVOCAR" -> getString(R.string.ui_acceso_revocado)
+                        else -> getString(R.string.ui_credencial_habilitada)
+                    }
+                    RecordRow(doc.id, action, AccessPolicy.maskedUid(doc.getString("tarjetaUid").orEmpty()),
+                        formatDate(doc.getTimestamp("fecha")?.toDate()) + getString(R.string.ui_nresponsable) + doc.getString("actorUid").orEmpty().take(12))
+                })
             }
-    }
-
-    private fun renderCards() {
-        if (!authorized) return
-        cards.removeAllViews()
-        val query = findViewById<EditText>(R.id.cardSearch).text.toString().trim()
-        val documents = cardDocuments.filter { it.id.contains(query, true) || it.getString("nombre").orEmpty().contains(query, true) }
-        if (documents.isEmpty()) label(cards, if (query.isEmpty()) "Aún no hay credenciales. Agrega la primera para comenzar." else "Sin coincidencias para esa búsqueda.")
-        documents.forEach { document ->
-            val name = document.getString("nombre").orEmpty()
-            val enabled = document.getBoolean("habilitada") == true
-            val row = tile(cards)
-            label(row, name, 20f)
-            label(row, AccessPolicy.maskedUid(document.id) + if (enabled) " · Activa" else " · Revocada")
-            row.addView(Button(this).apply {
-                text = "Ver credencial"
-                setOnClickListener {
-                    AlertDialog.Builder(this@MainActivity).setTitle(name)
-                        .setMessage("UID: " + document.id + "\nEstado: " + (if (enabled) "Activa" else "Revocada") +
-                            "\nActualización: " + formatDate(document.getTimestamp("actualizadaEn")?.toDate()))
-                        .setPositiveButton("Cerrar", null).show()
-                }
-            })
-            row.addView(Button(this).apply {
-                text = if (enabled) "Revocar acceso" else "Habilitar acceso"
-                isEnabled = !cardsCached && !document.metadata.hasPendingWrites() && !busy
-                setOnClickListener {
-                    AlertDialog.Builder(this@MainActivity).setTitle(text)
-                        .setMessage("¿Confirmas el cambio para " + name + "? Se aplicará a los nuevos intentos después de confirmar en Firebase.")
-                        .setNegativeButton("Cancelar", null)
-                        .setPositiveButton("Confirmar") { _, _ -> saveCard(document.id, name, !enabled, false) }.show()
-                }
-            })
-        }
-        findViewById<TextView>(R.id.cardCount).text = documents.size.toString() + " credenciales mostradas · máximo 100"
-        findViewById<TextView>(R.id.activeCount).text = cardDocuments.count { it.getBoolean("habilitada") == true }.toString()
     }
 
     private fun renderEvents() {
         if (!authorized) return
-        events.removeAllViews()
         val all = (physicalEvents + simulatedEvents).sortedByDescending { it.getTimestamp("fecha")?.seconds ?: 0 }
-        val filtered = all.filter { doc ->
-            when (eventFilter) {
-                "Permitidos" -> doc.getString("resultado") == "PERMITIDO"
-                "Rechazados" -> doc.getString("resultado") == "RECHAZADO"
-                "Simulados" -> doc.reference.parent.id == "eventosSimulados"
-                "Físicos" -> doc.reference.parent.id == "eventos"
-                else -> true
-            }
-        }
-        if (filtered.isEmpty()) label(events, "No hay eventos para este filtro. Realiza una lectura desde el punto de acceso.")
-        filtered.forEach { doc ->
+        val filtered = all.filter { doc -> when (eventFilter) {
+            1 -> doc.getString("resultado") == "PERMITIDO"
+            2 -> doc.getString("resultado") == "RECHAZADO"
+            3 -> doc.reference.parent.id == "eventosSimulados"
+            4 -> doc.reference.parent.id == "eventos"
+            else -> true
+        } }
+        findViewById<View>(R.id.eventsEmpty).visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
+        eventAdapter.submitList(filtered.map { doc ->
             val allowed = doc.getString("resultado") == "PERMITIDO"
             val simulated = doc.reference.parent.id == "eventosSimulados"
-            val row = tile(events)
-            label(row, if (allowed) "Acceso permitido" else "Acceso rechazado", 19f)
-            label(row, (if (simulated) "SIMULACIÓN" else "DISPOSITIVO FÍSICO") + " · " + AccessPolicy.maskedUid(doc.getString("uidRFID").orEmpty()))
-            label(row, formatDate(doc.getTimestamp("fecha")?.toDate()))
-            row.setOnClickListener {
-                AlertDialog.Builder(this).setTitle(if (simulated) "Detalle del intento simulado" else "Detalle del evento físico")
-                    .setMessage("Evento: " + doc.id + "\nResultado: " + doc.getString("resultado").orEmpty() +
-                        "\nMotivo: " + doc.getString("motivo").orEmpty() + "\nUID: " + AccessPolicy.maskedUid(doc.getString("uidRFID").orEmpty()) +
-                        "\nOrigen: " + doc.getString("dispositivoId").orEmpty() + "\nFecha local: " + formatDate(doc.getTimestamp("fecha")?.toDate()))
-                    .setPositiveButton("Cerrar", null).show()
-            }
-        }
+            val title = if (allowed) getString(R.string.ui_acceso_permitido) else getString(R.string.ui_acceso_rechazado)
+            val origin = getString(if (simulated) R.string.origin_simulated else R.string.origin_physical)
+            RecordRow(doc.reference.path, title, origin + " · " + AccessPolicy.maskedUid(doc.getString("uidRFID").orEmpty()),
+                formatDate(doc.getTimestamp("fecha")?.toDate()), getString(R.string.event_detail,
+                    doc.id, doc.getString("resultado").orEmpty(), doc.getString("motivo").orEmpty(),
+                    AccessPolicy.maskedUid(doc.getString("uidRFID").orEmpty()),
+                    doc.getString("dispositivoId").orEmpty(), formatDate(doc.getTimestamp("fecha")?.toDate())))
+        })
         findViewById<TextView>(R.id.eventCount).text = all.size.toString()
         findViewById<TextView>(R.id.latestAttempt).text = all.firstOrNull()?.let {
-            (if (it.getString("resultado") == "PERMITIDO") "Último intento permitido" else "Último intento rechazado") + "\n" +
-                formatDate(it.getTimestamp("fecha")?.toDate()) + " · " + (if (it.reference.parent.id == "eventosSimulados") "Simulación" else "Dispositivo físico")
-        } ?: "Sin intentos todavía. Abre el simulador en el segundo Android."
+            (if (it.getString("resultado") == "PERMITIDO") getString(R.string.ui_ultimo_intento_permitido) else getString(R.string.ui_ultimo_intento_rechazado)) + "\n" +
+                formatDate(it.getTimestamp("fecha")?.toDate()) + " · " +
+                (if (it.reference.parent.id == "eventosSimulados") getString(R.string.origin_simulated) else getString(R.string.ui_dispositivo_fisico))
+        } ?: getString(R.string.ui_sin_intentos_todavia_abre_el_simulador_en_el_segundo_an)
     }
 
-    private fun tile(parent: LinearLayout): LinearLayout {
-        val card = com.google.android.material.card.MaterialCardView(this).apply {
-            radius = dp(20).toFloat()
-            cardElevation = 0f
-            strokeWidth = dp(1)
-            setStrokeColor(getColor(R.color.outline))
-            layoutParams = LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(12) }
-        }
-        val row = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp(18), dp(12), dp(18), dp(12))
-        }
-        card.addView(row)
-        parent.addView(card)
-        return row
-    }
     private fun renderDevice() {
         if (!authorized) return
         val snapshot = device
         val seen = snapshot?.getTimestamp("ultimaConexion")?.toDate()
         val online = !deviceFromCache && AccessPolicy.isOnline(seen?.time, System.currentTimeMillis())
         findViewById<TextView>(R.id.deviceStatus).text = when {
-            snapshot == null || !snapshot.exists() -> "Sin datos del Arduino"
-            deviceFromCache -> "Sin conexión a Firebase · datos guardados"
-            online -> "Arduino conectado"
-            else -> "Arduino sin comunicación"
+            snapshot == null || !snapshot.exists() -> getString(R.string.ui_sin_datos_del_arduino)
+            deviceFromCache -> getString(R.string.ui_sin_conexion_a_firebase_datos_guardados)
+            online -> getString(R.string.ui_arduino_conectado)
+            else -> getString(R.string.ui_arduino_sin_comunicacion)
         }
         val door = when (snapshot?.getString("puerta")) {
-            "ABIERTA" -> "Abierta"
-            "CERRADA" -> "Cerrada"
-            else -> "Sin datos"
+            "ABIERTA" -> getString(R.string.ui_abierta)
+            "CERRADA" -> getString(R.string.ui_cerrada)
+            else -> getString(R.string.no_data)
         }
-        findViewById<TextView>(R.id.doorStatus).text = "Puerta: $door" + if (!online) " · estado sin confirmar" else ""
-        findViewById<TextView>(R.id.lastSeen).text = "Último reporte: " + formatDate(seen)
-        findViewById<TextView>(R.id.lastSync).text = "Última sincronización de tarjetas: " +
+        findViewById<TextView>(R.id.doorStatus).text = getString(R.string.door_state, door) + if (!online) getString(R.string.ui_estado_sin_confirmar) else ""
+        findViewById<TextView>(R.id.lastSeen).text = getString(R.string.ui_ultimo_reporte) + formatDate(seen)
+        findViewById<TextView>(R.id.lastSync).text = getString(R.string.ui_ultima_sincronizacion_de_tarjetas) +
             formatDate(snapshot?.getTimestamp("ultimaSincronizacionTarjetas")?.toDate())
     }
 
-    private fun showAddCard() {
-        val form = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(24), dp(8), dp(24), 0) }
-        val name = EditText(this).apply { hint = "Nombre del titular"; maxLines = 1; inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_CAP_WORDS }
-        val uid = EditText(this).apply { hint = "UID RFID hexadecimal"; maxLines = 1; inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS; isSaveEnabled = false }
-        form.addView(name)
-        form.addView(uid)
-        label(form, "Ingresa el UID leído por el RC522 (4, 7 o 10 bytes).")
-        val dialog = AlertDialog.Builder(this).setTitle("Agregar tarjeta").setView(form)
-            .setNegativeButton("Cancelar", null).setPositiveButton("Guardar", null).create()
-        dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                val value = AccessPolicy.normalizeUid(uid.text.toString())
-                val holder = name.text.toString().trim()
-                when {
-                    holder.isEmpty() || holder.length > 80 -> name.error = "Ingresa un nombre de 1 a 80 caracteres"
-                    value == null -> uid.error = "Usa 8, 14 o 20 dígitos hexadecimales"
-                    else -> { saveCard(value, holder, true, true); dialog.dismiss() }
-                }
-            }
-        }
-        dialog.show()
-    }
-
     private fun manageSimulator() {
-        val account = EditText(this).apply {
-            hint = "UID de la cuenta del segundo Android"
-            inputType = android.text.InputType.TYPE_CLASS_TEXT
-            setPadding(dp(24), dp(12), dp(24), dp(12))
-        }
-        val dialog = AlertDialog.Builder(this).setTitle("Vincular punto de acceso")
-            .setMessage("Copia el UID que aparece al iniciar sesión en el otro teléfono. Esta cuenta podrá simular lecturas; no administrar credenciales.")
-            .setView(account).setNegativeButton("Cancelar", null)
-            .setNeutralButton("Revocar", null).setPositiveButton("Habilitar", null).create()
+        val form = layoutInflater.inflate(R.layout.dialog_simulator, null)
+        val account = form.findViewById<EditText>(R.id.simulatorAccountInput)
+        val dialog = AlertDialog.Builder(this).setTitle(getString(R.string.ui_vincular_punto_de_acceso))
+            .setMessage(getString(R.string.ui_copia_el_uid_que_aparece_al_iniciar_sesion_en_el_otro_t))
+            .setView(form).setNegativeButton(getString(R.string.cancel), null)
+            .setNeutralButton(getString(R.string.ui_revocar), null).setPositiveButton(getString(R.string.ui_habilitar), null).create()
         dialog.setOnShowListener {
             fun save(active: Boolean) {
                 val uid = account.text.toString().trim()
                 if (!uid.matches(Regex("[A-Za-z0-9_-]{1,128}"))) {
-                    account.error = "Copia un UID de cuenta válido"
+                    account.error = getString(R.string.ui_copia_un_uid_de_cuenta_valido)
                     return
                 }
                 if (!authorized) return
@@ -379,10 +305,10 @@ class MainActivity : AppCompatActivity() {
                     if (isDestroyed || isFinishing) return@addOnCompleteListener
                     if (task.isSuccessful) {
                         dialog.dismiss()
-                        AlertDialog.Builder(this).setTitle(if (active) "Punto de acceso habilitado" else "Punto de acceso revocado")
-                            .setMessage("El permiso fue confirmado en Firebase.").setPositiveButton("Aceptar", null).show()
+                        AlertDialog.Builder(this).setTitle(if (active) getString(R.string.ui_punto_de_acceso_habilitado) else getString(R.string.ui_punto_de_acceso_revocado))
+                            .setMessage(getString(R.string.ui_el_permiso_fue_confirmado_en_firebase)).setPositiveButton(getString(R.string.ui_aceptar), null).show()
                     } else {
-                        account.error = "No se confirmó el cambio. Revisa conexión y permisos."
+                        account.error = getString(R.string.ui_no_se_confirmo_el_cambio_revisa_conexion_y_permisos)
                         dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
                         dialog.getButton(AlertDialog.BUTTON_NEUTRAL).isEnabled = true
                     }
@@ -394,49 +320,13 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun saveCard(uid: String, name: String, enabled: Boolean, create: Boolean) {
-        if (!authorized || busy) return
-        busy = true
-        addCard.isEnabled = false
-        renderCards()
-        operationStatus.text = "Verificando autorización y guardando…"
-        val user = auth.currentUser
-        if (user == null) { busy = false; openLogin(); return }
-        repository.db.collection("administradores").document(user.uid).get(Source.SERVER)
-            .continueWithTask { task ->
-                val admin = task.result
-                check(admin?.getBoolean("activo") == true) { "Administrador no autorizado" }
-                repository.saveCard(uid, name, enabled, create)
-            }.addOnCompleteListener { task ->
-                busy = false
-                if (isDestroyed || isFinishing) return@addOnCompleteListener
-                addCard.isEnabled = true
-                renderCards()
-                if (authorized) operationStatus.text = if (task.isSuccessful)
-                    "Cambio confirmado en Firebase. El simulador ya puede validar el nuevo estado; el hardware debe sincronizarlo."
-                else when (task.exception?.message) {
-                    "La tarjeta ya existe" -> "La tarjeta ya está registrada. Puedes habilitarla desde la lista."
-                    else -> "No se guardó el cambio. Revisa tu conexión y permisos; vuelve a intentarlo."
-                }
-            }
-    }
-
     private fun readError(error: FirebaseFirestoreException): String = when (error.code) {
-        FirebaseFirestoreException.Code.PERMISSION_DENIED -> "Acceso denegado. Revisa el administrador autorizado y las reglas de Firestore."
-        FirebaseFirestoreException.Code.UNAVAILABLE -> "No se puede conectar a Firebase. Revisa tu conexión."
-        else -> "No se pudieron cargar los datos. Vuelve a verificar el acceso."
+        FirebaseFirestoreException.Code.PERMISSION_DENIED -> getString(R.string.ui_acceso_denegado_revisa_el_administrador_autorizado_y_la)
+        FirebaseFirestoreException.Code.UNAVAILABLE -> getString(R.string.ui_no_se_puede_conectar_a_firebase_revisa_tu_conexion)
+        else -> getString(R.string.ui_no_se_pudieron_cargar_los_datos_vuelve_a_verificar_el_a)
     }
 
-    private fun label(parent: LinearLayout, text: String, size: Float = 15f) {
-        parent.addView(TextView(this).apply {
-            this.text = text
-            textSize = size
-            setPadding(0, dp(8), 0, dp(8))
-            setTextIsSelectable(false)
-        })
-    }
-    private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
-    private fun formatDate(date: Date?): String = date?.let { DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(it) } ?: "Sin datos"
+    private fun formatDate(date: Date?): String = date?.let { DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(it) } ?: getString(R.string.no_data)
     private fun openLogin() {
         startActivity(Intent(this, LoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

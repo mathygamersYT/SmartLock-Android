@@ -91,16 +91,16 @@ class SimulatorActivity : AppCompatActivity() {
     private fun updateAccess() {
         submit.isEnabled = (admin || simulator) && !busy
         findViewById<Button>(R.id.btnBackAdmin).visibility = if (admin) View.VISIBLE else View.GONE
-        status.text = if (admin || simulator) "Punto de acceso autorizado · Firebase conectado"
-            else "Verificando autorización. Se requiere conexión y un rol activo."
-        if ((admin || simulator) && result.text.toString() == "Esperando autorización") {
-            result.text = "Listo para validar"
-            detail.text = "Ingresa un UID y pulsa Simular lectura."
+        status.text = if (admin || simulator) getString(R.string.ui_punto_de_acceso_autorizado_firebase_conectado)
+            else getString(R.string.ui_verificando_autorizacion_se_requiere_conexion_y_un_rol_)
+        if ((admin || simulator) && result.text.toString() == getString(R.string.ui_esperando_autorizacion)) {
+            result.text = getString(R.string.ui_listo_para_validar)
+            detail.text = getString(R.string.ui_ingresa_un_uid_y_pulsa_simular_lectura)
         }
-        if (!admin && !simulator && !busy && result.text.toString() != "No se pudo validar") {
-            result.text = "Esperando autorización"
-            detail.text = "UID de esta cuenta: " + auth.currentUser?.uid.orEmpty() +
-                "\nEl responsable debe habilitar esta cuenta como simulador."
+        if (!admin && !simulator && !busy && result.text.toString() != getString(R.string.ui_no_se_pudo_validar)) {
+            result.text = getString(R.string.ui_esperando_autorizacion)
+            detail.text = getString(R.string.ui_uid_de_esta_cuenta) + auth.currentUser?.uid.orEmpty() +
+                getString(R.string.ui_nel_responsable_debe_habilitar_esta_cuenta_como_simulad)
         }
     }
 
@@ -108,7 +108,7 @@ class SimulatorActivity : AppCompatActivity() {
         if (busy || (!admin && !simulator)) return
         val uid = AccessPolicy.normalizeUid(uidInput.text.toString())
         if (uid == null) {
-            uidInput.error = "Ingresa 8, 14 o 20 dígitos hexadecimales"
+            uidInput.error = getString(R.string.ui_ingresa_8_14_o_20_digitos_hexadecimales)
             return
         }
         // An ambiguous network failure keeps the same ID for an idempotent retry.
@@ -122,8 +122,8 @@ class SimulatorActivity : AppCompatActivity() {
         submit.isEnabled = false
         uidInput.isEnabled = false
         findViewById<ProgressBar>(R.id.simProgress).visibility = View.VISIBLE
-        result.text = "Validando credencial…"
-        detail.text = "Esperando confirmación del servidor."
+        result.text = getString(R.string.ui_validando_credencial)
+        detail.text = getString(R.string.ui_esperando_confirmacion_del_servidor)
         repository.simulate(uid, id).addOnCompleteListener { task ->
             busy = false
             if (isDestroyed || isFinishing) return@addOnCompleteListener
@@ -132,24 +132,25 @@ class SimulatorActivity : AppCompatActivity() {
             updateAccess()
             if (task.isSuccessful && (admin || simulator)) {
                 val allowed = task.result["resultado"] == "PERMITIDO"
-                result.text = if (allowed) "Acceso permitido" else "Acceso rechazado"
+                result.text = if (allowed) getString(R.string.ui_acceso_permitido) else getString(R.string.ui_acceso_rechazado)
                 result.setTextColor(getColor(if (allowed) R.color.success else R.color.danger))
                 val reason = when (task.result["motivo"]) {
-                    "ACTIVA" -> "Credencial activa · apertura simulada"
-                    "REVOCADA" -> "La credencial fue revocada"
-                    else -> "Credencial no registrada"
+                    "ACTIVA" -> getString(R.string.ui_credencial_activa_apertura_simulada)
+                    "REVOCADA" -> getString(R.string.ui_la_credencial_fue_revocada)
+                    "ELIMINADA" -> getString(R.string.ui_la_credencial_fue_eliminada)
+                    else -> getString(R.string.ui_credencial_no_registrada)
                 }
-                detail.text = reason + "\nEvento: " + id + "\nConfirmado en Firebase · " +
-                    (SystemClock.elapsedRealtime() - started) + " ms\nConsulta este evento en el Android administrador."
+                detail.text = reason + getString(R.string.ui_nevento) + id + getString(R.string.ui_nconfirmado_en_firebase) +
+                    (SystemClock.elapsedRealtime() - started) + getString(R.string.ui_ms_nconsulta_este_evento_en_el_android_administrador)
                 pendingId = null
                 pendingUid = null
-                submit.text = "Simular otra lectura"
+                submit.text = getString(R.string.ui_simular_otra_lectura)
             } else {
-                result.text = "No se pudo validar"
+                result.text = getString(R.string.ui_no_se_pudo_validar)
                 result.setTextColor(getColor(R.color.danger))
-                detail.text = "No se concede acceso. Revisa la red, el rol y las reglas de Firebase. " +
-                    "Reintenta con el mismo UID para recuperar la confirmación sin duplicar el evento."
-                submit.text = "Reintentar validación"
+                detail.text = getString(R.string.ui_no_se_concede_acceso_revisa_la_red_el_rol_y_las_reglas_) +
+                    getString(R.string.ui_reintenta_con_el_mismo_uid_para_recuperar_la_confirmaci)
+                submit.text = getString(R.string.ui_reintentar_validacion)
             }
         }
     }

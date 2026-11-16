@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/PanelContent">
+    <TextView style="@style/BodyCopy" android:text="@string/ui_copia_el_uid_de_la_cuenta_del_segundo_android_solo_podr" />
+    <EditText android:id="@+id/simulatorAccountInput" style="@style/FormField" android:hint="@string/ui_uid_de_la_cuenta_del_segundo_android" android:inputType="text" android:maxLength="128" android:importantForAutofill="no" />
+</LinearLayout>

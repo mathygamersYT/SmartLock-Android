@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" style="@style/Panel">
+    <LinearLayout style="@style/PanelContent">
+        <TextView android:id="@+id/recordTitle" style="@style/SectionTitle" tools:text="Acceso permitido" />
+        <TextView android:id="@+id/recordSubtitle" style="@style/BodyCopy" tools:text="SIMULACIÓN · •••• 9C21" />
+        <TextView android:id="@+id/recordDetail" style="@style/Caption" tools:text="16/11/2026 10:30" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

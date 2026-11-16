@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
     private fun validEmail(): String? {
         val value = email.text.toString().trim()
         if (!Patterns.EMAIL_ADDRESS.matcher(value).matches()) {
-            email.error = "Ingresa un correo válido"
+            email.error = getString(R.string.ui_ingresa_un_correo_valido)
             email.requestFocus()
             return null
         }
@@ -70,7 +70,7 @@ class LoginActivity : AppCompatActivity() {
         val address = validEmail() ?: return
         val secret = password.text.toString()
         if (secret.isEmpty() || (register && secret.length < 6)) {
-            password.error = if (register) "Usa al menos 6 caracteres" else "Ingresa tu contraseña"
+            password.error = if (register) getString(R.string.ui_usa_al_menos_6_caracteres) else getString(R.string.ui_ingresa_tu_contrasena)
             password.requestFocus()
             return
         }
@@ -95,7 +95,7 @@ class LoginActivity : AppCompatActivity() {
         auth.sendPasswordResetEmail(address).addOnCompleteListener(this) {
             setBusy(false)
             status.text = if (it.isSuccessful)
-                "Si existe una cuenta con ese correo, recibirás instrucciones para recuperar tu contraseña."
+                getString(R.string.ui_si_existe_una_cuenta_con_ese_correo_recibiras_instrucci)
             else errorMessage(it.exception)
         }
     }
@@ -112,18 +112,18 @@ class LoginActivity : AppCompatActivity() {
     private fun errorMessage(error: Exception?): String {
         val details = error?.message.orEmpty()
         if (details.contains("CONFIGURATION_NOT_FOUND", ignoreCase = true)) {
-            return "Falta configurar Firebase Authentication. En la consola del proyecto iot-aki-d467d, abre Authentication, pulsa Comenzar y activa Correo/contraseña."
+            return getString(R.string.ui_falta_configurar_firebase_authentication_en_la_consola_)
         }
         return when (error) {
-        is FirebaseNetworkException -> "Sin conexión. Revisa tu internet e inténtalo nuevamente."
-        is FirebaseTooManyRequestsException -> "Demasiados intentos. Espera un momento e inténtalo nuevamente."
+        is FirebaseNetworkException -> getString(R.string.ui_sin_conexion_revisa_tu_internet_e_intentalo_nuevamente)
+        is FirebaseTooManyRequestsException -> getString(R.string.ui_demasiados_intentos_espera_un_momento_e_intentalo_nueva)
         is FirebaseAuthException -> when (error.errorCode) {
-            "ERROR_OPERATION_NOT_ALLOWED" -> "Activa el proveedor Correo/contraseña en Firebase Authentication."
-            "ERROR_WEAK_PASSWORD" -> "La contraseña no cumple los requisitos de seguridad del proyecto."
-            "ERROR_EMAIL_ALREADY_IN_USE" -> "No se pudo crear la cuenta. Prueba iniciar sesión o recuperar tu contraseña."
-            else -> "No se pudo autenticar. Revisa tus datos o recupera tu contraseña."
+            "ERROR_OPERATION_NOT_ALLOWED" -> getString(R.string.ui_activa_el_proveedor_correo_contrasena_en_firebase_authe)
+            "ERROR_WEAK_PASSWORD" -> getString(R.string.ui_la_contrasena_no_cumple_los_requisitos_de_seguridad_del)
+            "ERROR_EMAIL_ALREADY_IN_USE" -> getString(R.string.ui_no_se_pudo_crear_la_cuenta_prueba_iniciar_sesion_o_recu)
+            else -> getString(R.string.ui_no_se_pudo_autenticar_revisa_tus_datos_o_recupera_tu_co)
         }
-        else -> "No se pudo completar la solicitud. Inténtalo nuevamente."
+        else -> getString(R.string.ui_no_se_pudo_completar_la_solicitud_intentalo_nuevamente)
         }
     }
 

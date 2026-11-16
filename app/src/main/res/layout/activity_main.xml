@@ -1,80 +1,94 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
- android:id="@+id/main" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:background="@color/page">
- <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
-  <TextView style="@style/Eyebrow" android:text="SMART LOCK / CONTROL DE ACCESO" />
-  <TextView style="@style/ScreenTitle" android:text="Control de acceso" android:textSize="28sp" />
-  <TextView android:id="@+id/sessionEmail" style="@style/BodyCopy" android:text="" />
-  <com.google.android.material.card.MaterialCardView style="@style/Panel" app:cardBackgroundColor="@color/ink">
-   <LinearLayout style="@style/PanelContent">
-    <TextView style="@style/Eyebrow" android:textColor="#8EE9C0" android:text="DEMOSTRACIÓN CON DOS ANDROID" />
-    <TextView style="@style/SectionTitle" android:textColor="#FFFFFF" android:text="Punto de acceso" />
-    <TextView style="@style/BodyCopy" android:textColor="#DFE7EF" android:text="Prueba una lectura RFID desde este u otro Android." />
-    <Button android:id="@+id/btnSimulator" style="@style/PrimaryAction" android:backgroundTint="@color/accent" android:textColor="#09251D" android:text="Abrir punto de acceso" />
-   </LinearLayout>
-  </com.google.android.material.card.MaterialCardView>
-  <com.google.android.material.card.MaterialCardView android:id="@+id/rolePanel" style="@style/Panel">
-   <LinearLayout style="@style/PanelContent">
-    <TextView android:id="@+id/accessStatus" style="@style/BodyCopy" android:accessibilityLiveRegion="polite" android:text="Verificando tu autorización…" />
-    <TextView android:id="@+id/accountUid" style="@style/Caption" android:textIsSelectable="true" />
-    <Button android:id="@+id/btnRefreshAccess" style="@style/SecondaryAction" android:text="Verificar acceso de administrador" />
-   </LinearLayout>
-  </com.google.android.material.card.MaterialCardView>
-  <LinearLayout android:id="@+id/adminContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
-   <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none" android:layout_marginBottom="16dp">
-    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
-     <Button android:id="@+id/tabSummary" style="@style/TabAction" android:text="Inicio" />
-     <Button android:id="@+id/tabCards" style="@style/TabAction" android:text="Credenciales" />
-     <Button android:id="@+id/tabHistory" style="@style/TabAction" android:text="Historial" />
-     <Button android:id="@+id/tabAudit" style="@style/TabAction" android:text="Auditoría" />
+<?xml version='1.0' encoding='utf-8'?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/main" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:background="@color/page" tools:context=".MainActivity">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+        <TextView style="@style/Eyebrow" android:text="@string/ui_smart_lock_control_de_acceso" />
+        <TextView style="@style/ScreenTitle" android:text="@string/ui_control_de_acceso" android:textSize="28sp" />
+        <TextView android:id="@+id/sessionEmail" style="@style/BodyCopy" android:text="" />
+        <com.google.android.material.card.MaterialCardView style="@style/Panel" app:cardBackgroundColor="@color/ink">
+            <LinearLayout style="@style/PanelContent">
+                <TextView style="@style/Eyebrow" android:textColor="#8EE9C0" android:text="@string/ui_demostracion_con_dos_android" />
+                <TextView style="@style/SectionTitle" android:textColor="#FFFFFF" android:text="@string/ui_punto_de_acceso" />
+                <TextView style="@style/BodyCopy" android:textColor="#DFE7EF" android:text="@string/ui_prueba_una_lectura_rfid_desde_este_u_otro_android" />
+                <Button android:id="@+id/btnSimulator" style="@style/PrimaryAction" android:backgroundTint="@color/accent" android:textColor="#09251D" android:text="@string/ui_abrir_punto_de_acceso" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView android:id="@+id/rolePanel" style="@style/Panel">
+            <LinearLayout style="@style/PanelContent">
+                <TextView android:id="@+id/accessStatus" style="@style/BodyCopy" android:accessibilityLiveRegion="polite" android:text="@string/ui_verificando_tu_autorizacion" />
+                <TextView android:id="@+id/accountUid" style="@style/Caption" android:textIsSelectable="true" />
+                <Button android:id="@+id/btnRefreshAccess" style="@style/SecondaryAction" android:text="@string/ui_verificar_acceso_de_administrador" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <LinearLayout android:id="@+id/adminContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone" tools:visibility="visible">
+            <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none" android:layout_marginBottom="16dp">
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                    <Button android:id="@+id/tabSummary" style="@style/TabAction" android:text="@string/ui_inicio" />
+                    <Button android:id="@+id/tabCards" style="@style/TabAction" android:text="@string/ui_credenciales" />
+                    <Button android:id="@+id/tabHistory" style="@style/TabAction" android:text="@string/ui_historial" />
+                    <Button android:id="@+id/tabAudit" style="@style/TabAction" android:text="@string/ui_auditoria" />
+                </LinearLayout>
+            </HorizontalScrollView>
+            <LinearLayout android:id="@+id/summarySection" style="@style/SectionContent">
+                <TextView style="@style/SectionTitle" android:text="@string/ui_vista_general" />
+                <Button android:id="@+id/btnPairSimulator" style="@style/SecondaryAction" android:text="@string/ui_vincular_o_revocar_segundo_android" />
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                    <com.google.android.material.card.MaterialCardView style="@style/Panel" android:layout_width="0dp" android:layout_weight="1" android:layout_marginEnd="8dp">
+                        <LinearLayout style="@style/PanelContent">
+                            <TextView android:id="@+id/activeCount" style="@style/ScreenTitle" android:text="@string/ui_0" />
+                            <TextView style="@style/Caption" android:text="@string/ui_credenciales_activas" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <com.google.android.material.card.MaterialCardView style="@style/Panel" android:layout_width="0dp" android:layout_weight="1">
+                        <LinearLayout style="@style/PanelContent">
+                            <TextView android:id="@+id/eventCount" style="@style/ScreenTitle" android:text="@string/ui_0" />
+                            <TextView style="@style/Caption" android:text="@string/ui_intentos_recientes" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+                <com.google.android.material.card.MaterialCardView style="@style/Panel">
+                    <LinearLayout style="@style/PanelContent">
+                        <TextView style="@style/Eyebrow" android:text="@string/ui_actividad_reciente" />
+                        <TextView android:id="@+id/latestAttempt" style="@style/BodyCopy" android:text="@string/ui_cargando_intentos" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView style="@style/Panel">
+                    <LinearLayout style="@style/PanelContent">
+                        <TextView style="@style/Eyebrow" android:text="@string/ui_hardware_puerta_principal" />
+                        <TextView android:id="@+id/deviceStatus" style="@style/SectionTitle" android:text="@string/ui_sin_datos_del_arduino" />
+                        <TextView android:id="@+id/doorStatus" style="@style/BodyCopy" android:text="@string/ui_puerta_sin_datos" />
+                        <TextView android:id="@+id/lastSeen" style="@style/Caption" android:text="@string/ui_ultimo_reporte_sin_datos" />
+                        <TextView android:id="@+id/lastSync" style="@style/Caption" android:text="@string/ui_sin_sincronizacion_confirmada" />
+                        <TextView style="@style/Caption" android:layout_marginTop="12dp" android:text="@string/ui_los_intentos_simulados_no_accionan_una_cerradura_ni_con" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+            <LinearLayout android:id="@+id/cardsSection" style="@style/SectionContent" android:visibility="gone" tools:visibility="visible">
+                <TextView style="@style/SectionTitle" android:text="@string/ui_credenciales_rfid" />
+                <TextView style="@style/BodyCopy" android:text="@string/ui_registra_busca_y_revoca_permisos_de_acceso" />
+                <EditText android:id="@+id/cardSearch" style="@style/FormField" android:hint="@string/ui_buscar_por_nombre_o_uid" android:inputType="text" android:autofillHints="" />
+                <CheckBox android:id="@+id/showDeleted" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/ui_mostrar_credenciales_eliminadas" />
+                <Button android:id="@+id/btnAddCard" style="@style/PrimaryAction" android:text="@string/add_card" />
+                <TextView android:id="@+id/operationStatus" style="@style/BodyCopy" android:accessibilityLiveRegion="polite" />
+                <TextView android:id="@+id/cardCount" style="@style/Caption" />
+                <TextView android:id="@+id/cardsSync" style="@style/Caption" android:layout_marginBottom="16dp" />
+                <TextView android:id="@+id/cardsEmpty" style="@style/BodyCopy" android:text="@string/ui_sin_credenciales_para_esta_busqueda" android:visibility="gone" tools:visibility="visible" />
+                <androidx.recyclerview.widget.RecyclerView android:id="@+id/cardList" android:layout_width="match_parent" android:layout_height="420dp" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" tools:listitem="@layout/row_credential" tools:itemCount="2" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/historySection" style="@style/SectionContent" android:visibility="gone" tools:visibility="visible">
+                <TextView style="@style/SectionTitle" android:text="@string/ui_historial_de_accesos" />
+                <TextView style="@style/BodyCopy" android:text="@string/ui_selecciona_un_intento_para_consultar_sus_detalles" />
+                <Spinner android:id="@+id/eventFilter" android:layout_width="match_parent" android:layout_height="56dp" android:contentDescription="@string/ui_filtrar_historial_por_resultado_u_origen" />
+                <TextView android:id="@+id/historySync" style="@style/Caption" android:layout_marginBottom="16dp" />
+                <TextView android:id="@+id/eventsEmpty" style="@style/BodyCopy" android:text="@string/ui_sin_eventos_para_este_filtro" android:visibility="gone" tools:visibility="visible" />
+                <androidx.recyclerview.widget.RecyclerView android:id="@+id/eventList" android:layout_width="match_parent" android:layout_height="420dp" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" tools:listitem="@layout/row_record" tools:itemCount="2" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/auditSection" style="@style/SectionContent" android:visibility="gone" tools:visibility="visible">
+                <TextView style="@style/SectionTitle" android:text="@string/ui_auditoria_de_cambios" />
+                <TextView style="@style/BodyCopy" android:text="@string/ui_altas_habilitaciones_y_revocaciones_con_fecha_y_respons" />
+                <TextView android:id="@+id/auditEmpty" style="@style/BodyCopy" android:text="@string/audit_empty" android:visibility="gone" tools:visibility="visible" />
+                <androidx.recyclerview.widget.RecyclerView android:id="@+id/auditList" android:layout_width="match_parent" android:layout_height="420dp" app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" tools:listitem="@layout/row_record" tools:itemCount="2" />
+            </LinearLayout>
+        </LinearLayout>
+        <Button android:id="@+id/btnLogout" style="@style/SecondaryAction" android:text="@string/ui_cerrar_sesion" />
     </LinearLayout>
-   </HorizontalScrollView>
-   <LinearLayout android:id="@+id/summarySection" style="@style/SectionContent">
-    <TextView style="@style/SectionTitle" android:text="Vista general" />
-    <Button android:id="@+id/btnPairSimulator" style="@style/SecondaryAction" android:text="Vincular o revocar segundo Android" />
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
-     <com.google.android.material.card.MaterialCardView style="@style/Panel" android:layout_width="0dp" android:layout_weight="1" android:layout_marginEnd="8dp">
-      <LinearLayout style="@style/PanelContent"><TextView android:id="@+id/activeCount" style="@style/ScreenTitle" android:text="0" /><TextView style="@style/Caption" android:text="Credenciales activas" /></LinearLayout>
-     </com.google.android.material.card.MaterialCardView>
-     <com.google.android.material.card.MaterialCardView style="@style/Panel" android:layout_width="0dp" android:layout_weight="1">
-      <LinearLayout style="@style/PanelContent"><TextView android:id="@+id/eventCount" style="@style/ScreenTitle" android:text="0" /><TextView style="@style/Caption" android:text="Intentos recientes" /></LinearLayout>
-     </com.google.android.material.card.MaterialCardView>
-    </LinearLayout>
-    <com.google.android.material.card.MaterialCardView style="@style/Panel"><LinearLayout style="@style/PanelContent">
-     <TextView style="@style/Eyebrow" android:text="ACTIVIDAD RECIENTE" /><TextView android:id="@+id/latestAttempt" style="@style/BodyCopy" android:text="Cargando intentos…" />
-    </LinearLayout></com.google.android.material.card.MaterialCardView>
-    <com.google.android.material.card.MaterialCardView style="@style/Panel"><LinearLayout style="@style/PanelContent">
-     <TextView style="@style/Eyebrow" android:text="HARDWARE / PUERTA PRINCIPAL" />
-     <TextView android:id="@+id/deviceStatus" style="@style/SectionTitle" android:text="Sin datos del Arduino" />
-     <TextView android:id="@+id/doorStatus" style="@style/BodyCopy" android:text="Puerta: sin datos" />
-     <TextView android:id="@+id/lastSeen" style="@style/Caption" android:text="Último reporte: sin datos" />
-     <TextView android:id="@+id/lastSync" style="@style/Caption" android:text="Sin sincronización confirmada" />
-     <TextView style="@style/Caption" android:layout_marginTop="12dp" android:text="Los intentos simulados no accionan una cerradura ni confirman su estado físico." />
-    </LinearLayout></com.google.android.material.card.MaterialCardView>
-   </LinearLayout>
-   <LinearLayout android:id="@+id/cardsSection" style="@style/SectionContent" android:visibility="gone">
-    <TextView style="@style/SectionTitle" android:text="Credenciales RFID" />
-    <TextView style="@style/BodyCopy" android:text="Registra, busca y revoca permisos de acceso." />
-    <EditText android:id="@+id/cardSearch" style="@style/FormField" android:hint="Buscar por nombre o UID" android:inputType="text" android:autofillHints="" />
-    <Button android:id="@+id/btnAddCard" style="@style/PrimaryAction" android:text="Agregar credencial" />
-    <TextView android:id="@+id/operationStatus" style="@style/BodyCopy" android:accessibilityLiveRegion="polite" />
-    <TextView android:id="@+id/cardCount" style="@style/Caption" />
-    <TextView android:id="@+id/cardsSync" style="@style/Caption" android:layout_marginBottom="16dp" />
-    <LinearLayout android:id="@+id/cardList" style="@style/SectionContent" />
-   </LinearLayout>
-   <LinearLayout android:id="@+id/historySection" style="@style/SectionContent" android:visibility="gone">
-    <TextView style="@style/SectionTitle" android:text="Historial de accesos" />
-    <TextView style="@style/BodyCopy" android:text="Selecciona un intento para consultar sus detalles." />
-    <Spinner android:id="@+id/eventFilter" android:layout_width="match_parent" android:layout_height="56dp" android:contentDescription="Filtrar historial por resultado u origen" />
-    <TextView android:id="@+id/historySync" style="@style/Caption" android:layout_marginBottom="16dp" />
-    <LinearLayout android:id="@+id/eventList" style="@style/SectionContent" />
-   </LinearLayout>
-   <LinearLayout android:id="@+id/auditSection" style="@style/SectionContent" android:visibility="gone">
-    <TextView style="@style/SectionTitle" android:text="Auditoría de cambios" />
-    <TextView style="@style/BodyCopy" android:text="Altas, habilitaciones y revocaciones con fecha y responsable. Últimos 50 registros." />
-    <LinearLayout android:id="@+id/auditList" style="@style/SectionContent" />
-   </LinearLayout>
-  </LinearLayout>
-  <Button android:id="@+id/btnLogout" style="@style/SecondaryAction" android:text="Cerrar sesión" />
- </LinearLayout>
 </ScrollView>
