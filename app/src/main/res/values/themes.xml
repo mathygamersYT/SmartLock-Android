@@ -4,7 +4,7 @@
   <item name="colorSecondary">@color/accent</item><item name="colorSurface">@color/surface</item>
   <item name="colorOnSurface">@color/text</item><item name="android:colorBackground">@color/page</item>
   <item name="android:windowLightStatusBar">true</item><item name="android:statusBarColor">@color/page</item>
-  <item name="android:navigationBarColor">@color/page</item><item name="android:fontFamily">sans</item>
+  <item name="android:navigationBarColor">@color/page</item><item name="android:fontFamily">sans-serif</item>
  </style>
  <style name="Theme.IoT" parent="Base.Theme.IoT" />
  <style name="BodyCopy"><item name="android:layout_width">match_parent</item><item name="android:layout_height">wrap_content</item><item name="android:textColor">@color/text</item><item name="android:textSize">16sp</item><item name="android:lineSpacingExtra">4dp</item><item name="android:layout_marginBottom">12dp</item></style>
